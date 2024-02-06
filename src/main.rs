@@ -1,4 +1,4 @@
-use std::collections::{hash_map, HashMap};
+use std::collections::HashMap;
 
 use console::{style, Color, Term};
 
@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 
 use std::fs::File;
-use std::io::{self, Write};
+use std::io::Write;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize)]
 struct Key {
@@ -70,15 +70,6 @@ impl Door {
             associated_room,
         }
     }
-
-    fn unlock(&mut self, key: Key) -> bool {
-        if key == self.key {
-            self.locked = false;
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,9 +109,12 @@ struct Player {
     attack: i32,
     is_dead: bool,
 
+    battles: Vec<BattleResult>,
+
     current_room: Room,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct BattleResult {
     winner: bool,
     player_health: i32,
@@ -141,19 +135,18 @@ impl Player {
     fn fight(&mut self, enemy: &Player) -> BattleResult {
         let mut rng = rand::thread_rng();
 
-        let player_attack = self.attack + rng.gen_range(0..(self.attack / 4));
-        let enemy_attack = enemy.attack + rng.gen_range(0..(enemy.attack / 4));
+        let mut player_attack = self.attack + rng.gen_range(-(self.attack / 4)..(self.attack / 4));
+        let mut enemy_attack =
+            enemy.attack + rng.gen_range(-(enemy.attack / 4)..(enemy.attack / 4));
 
-        let player_health = self.health;
         let enemy_health = enemy.health;
 
-        let mut player_health = player_health;
         let mut enemy_health = enemy_health;
 
         write(
             format!(
             "You are in a fight! You have to fight the enemy! You have {} health and {} attack, the enemy {} health and {} attack.",
-            player_health, player_attack, enemy_health, enemy_attack
+            self.health, player_attack, enemy_health, enemy_attack
             ).as_str(),
             "magenta"
         );
@@ -174,8 +167,8 @@ impl Player {
         loop {
             write(
                 format!(
-                    "You have {} health, the enemy has {} health. Do you wish to use an item? (y/n)",
-                    player_health, enemy_health
+                    "You have {} health and {} attack, the enemy has {} health and {} attac. Do you wish to use an item? (y/n)",
+                    self.health, player_attack, enemy_health, enemy_attack
                 )
                 .as_str(),
                 "magenta"
@@ -188,7 +181,7 @@ impl Player {
                     write("Which item do you want to use?", "magenta");
 
                     for item in &self.items_held {
-                        write(format!("You have the {}", item.name).as_str(), "magenta");
+                        write(format!("You have the {}, which buffs you {} health and {} attack", item.name, item.health, item.attack).as_str(), "magenta");
                     }
 
                     let input = Term::stdout().read_line().unwrap();
@@ -212,16 +205,22 @@ impl Player {
                 }
             }
 
-            player_health -= enemy_attack;
+            self.health -= enemy_attack;
+
+            if self.health <= 0 {
+                self.battles.push(BattleResult::new(false, self.health, enemy_health));
+                return BattleResult::new(false, self.health, enemy_health);
+            }
+
             enemy_health -= player_attack;
 
-            if player_health <= 0 {
-                return BattleResult::new(false, player_health, enemy_health);
+            if enemy_health <= 0 {
+                self.battles.push(BattleResult::new(true, self.health, enemy_health));
+                return BattleResult::new(true, self.health, enemy_health);
             }
 
-            if enemy_health <= 0 {
-                return BattleResult::new(true, player_health, enemy_health);
-            }
+            player_attack = self.attack + rng.gen_range(-(self.attack / 4)..(self.attack / 4));
+            enemy_attack = enemy.attack + rng.gen_range(-(enemy.attack / 4)..(enemy.attack / 4));
         }
     }
 
@@ -252,6 +251,22 @@ impl Player {
         questions.insert(
             "What has a foot but no legs?".to_string(),
             vec!["snail".to_string()],
+        );
+        questions.insert(
+            "What has a bark but no bite?".to_string(),
+            vec!["tree".to_string()],
+        );
+        questions.insert(
+            "What has a bed but never sleeps?".to_string(),
+            vec!["river".to_string()],
+        );
+        questions.insert(
+            "What has a face and two hands but no arms or legs?".to_string(),
+            vec!["clock".to_string()],
+        );
+        questions.insert(
+            "What has a head and a tail but no body?".to_string(),
+            vec!["coin".to_string()],
         );
 
         let mut rng = rand::thread_rng();
@@ -293,6 +308,14 @@ impl Player {
                             write("You won the fight!", "green");
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
+                            write(
+                                format!(
+                                    "The enemy had {} health left (you died with {}).",
+                                    result.enemy_health, result.player_health
+                                )
+                                .as_str(),
+                                "red",
+                            );
                             self.is_dead = true;
                             return;
                         }
@@ -325,7 +348,6 @@ impl Player {
             write("I find no such door", "red");
         } else {
             let term = Term::stdout();
-            term.clear_screen().unwrap();
             write(
                 format!("You are in the {}", self.current_room.name).as_str(),
                 "blue",
@@ -394,19 +416,12 @@ impl Player {
         self.current_room.keys.retain(|k| k.name != key_name);
     }
 
-    fn use_key(&mut self, key: Key, door_name: String) {
-        for door in &mut self.current_room.doors {
-            if door.name == door_name {
-                door.unlock(key.clone());
-            }
-        }
-
-        self.keys_held.retain(|k: &Key| k != &key);
-    }
-
     fn save(&self) {
         if std::env::args().any(|arg| arg == "--no-save" || arg == "-n") {
-            write("Not saving the game, this was ran on development mode.", "red");
+            write(
+                "Not saving the game, this was ran on development mode.",
+                "red",
+            );
             write("Manual override (y/n)?", "yellow");
 
             let input = Term::stdout().read_line().unwrap();
@@ -451,11 +466,11 @@ fn write(text: &str, color: &str) {
 
 macro_rules! out {
     ($text:expr, $color:expr) => {
-        write($text, $color);
+        write($text, $color)
     };
 
     ($text:expr) => {
-        write($text, "blue");
+        write($text, "blue")
     };
 }
 
@@ -513,6 +528,7 @@ fn main() {
                             health: 100,
                             attack: 10,
                             is_dead: false,
+                            battles: vec![],
                             current_room: empty_room.clone(),
                         }),
                         Room::new(
@@ -522,7 +538,7 @@ fn main() {
                             vec![Item::new(
                                 "trophy".to_string(),
                                 "a shiny trophy showcasing your victory!".to_string(),
-                                0,
+                                40,
                                 0,
                             )],
                             vec![],
@@ -561,6 +577,7 @@ fn main() {
         health: 100,
         attack: 10,
         is_dead: false,
+        battles: vec![],
         current_room: room,
     };
 
@@ -568,7 +585,6 @@ fn main() {
         player = serde_json::from_reader(file).unwrap();
 
         let term = Term::stdout();
-        term.clear_screen().unwrap();
         write(
             format!("You are in the {}", player.current_room.name).as_str(),
             "blue",
@@ -684,6 +700,23 @@ fn main() {
 
             "help" => {
                 out!(format!("").as_str())
+            }
+
+            "save" => {
+                player.save();
+            }
+
+            "battles" => {
+                for battle in &player.battles {
+                    write(
+                        format!(
+                            "You fought an enemy and {}",
+                            if battle.winner { "won" } else { "lost" }
+                        )
+                        .as_str(),
+                        "green",
+                    );
+                }
             }
 
             "inventory" => {
