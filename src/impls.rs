@@ -66,12 +66,17 @@ impl Room {
 }
 
 impl BattleResult {
-    pub fn new(winner: bool, player_health: i32, enemy_health: i32, enemy_name: String) -> BattleResult {
+    pub fn new(
+        winner: bool,
+        player_health: i32,
+        enemy_health: i32,
+        enemy_name: String,
+    ) -> BattleResult {
         BattleResult {
             winner,
             player_health,
             enemy_health,
-            enemy_name
+            enemy_name,
         }
     }
 }
@@ -100,7 +105,7 @@ impl Player {
             game_name,
         }
     }
-    pub fn fight(&mut self, enemy: &Player) -> BattleResult {
+    pub fn fight(&mut self, enemy: &mut Player) -> BattleResult {
         let initial_health = self.health;
         let initial_attack = self.attack;
 
@@ -170,6 +175,13 @@ impl Player {
 
                     match item_from_inventory {
                         Some(item) => {
+                            write(
+                                format!(
+                                    "You used the {}, which buffs you {} health and {} attack",
+                                    item.name, item.health, item.attack
+                                ).as_str(),
+                                "green",
+                            );
                             self.use_item(item.clone());
                         }
                         None => {
@@ -183,10 +195,30 @@ impl Player {
                 }
             }
 
+            if enemy.items_held.len() > 0 {
+                let item = enemy.items_held[rng.gen_range(0..enemy.items_held.len())].clone();
+
+                write(
+                    format!(
+                        "The enemy used the {}, which buffs them {} health and {} attack",
+                        item.name, item.health, item.attack
+                    )
+                    .as_str(),
+                    "green",
+                );
+
+                enemy.use_item(item);
+            }
+
             self.health -= enemy_attack;
 
             if self.health <= 0 {
-                self.battles.push(BattleResult::new(false, 0, enemy_health, enemy.name.clone()));
+                self.battles.push(BattleResult::new(
+                    false,
+                    0,
+                    enemy_health,
+                    enemy.name.clone(),
+                ));
 
                 self.health = initial_health;
                 self.attack = initial_attack;
@@ -197,7 +229,8 @@ impl Player {
             enemy_health -= player_attack;
 
             if enemy_health <= 0 {
-                self.battles.push(BattleResult::new(true, self.health, 0, enemy.name.clone()));
+                self.battles
+                    .push(BattleResult::new(true, self.health, 0, enemy.name.clone()));
 
                 self.health = initial_health;
                 self.attack = initial_attack;
@@ -305,11 +338,14 @@ impl Player {
                     write("The door is locked.", "red");
                     return;
                 } else {
-                    if let Some(enemy) = &door.enemy {
+                    if let Some(enemy) = &mut door.enemy.clone() {
                         let result = self.fight(enemy);
 
                         if result.winner {
-                            write("You won the fight! You gain an extra 15% health and 10% attack.", "green");
+                            write(
+                                "You won the fight! You gain an extra 15% health and 10% attack.",
+                                "green",
+                            );
                             self.health += (self.health as f32 * 0.15) as i32;
                             self.attack += (self.attack as f32 * 0.10) as i32;
                         } else {
@@ -325,8 +361,6 @@ impl Player {
                             return;
                         }
                     }
-
-
 
                     let old_room = self.current_room.clone();
 
@@ -350,17 +384,17 @@ impl Player {
 
                     for room in self.map.clone().values() {
                         for door in &room.doors {
-                            if door.associated_room_name == self.current_room.name && !self.current_room.doors.iter().any(|d| d.name == room.name){
-                                self.current_room.doors.push(
-                                    Door::new(
-                                        room.name.clone(),
-                                        format!("a door to the {}", room.name),
-                                        false,
-                                        Key::new("".to_string()),
-                                        None,
-                                        room.name.clone(),
-                                    ),
-                                );
+                            if door.associated_room_name == self.current_room.name
+                                && !self.current_room.doors.iter().any(|d| d.name == room.name)
+                            {
+                                self.current_room.doors.push(Door::new(
+                                    room.name.clone(),
+                                    format!("a door to the {}", room.name),
+                                    false,
+                                    Key::new("".to_string()),
+                                    None,
+                                    room.name.clone(),
+                                ));
                             }
                         }
                     }
@@ -410,15 +444,6 @@ impl Player {
     pub fn use_item(&mut self, item: Item) {
         self.health += item.health;
         self.attack += item.attack;
-
-        write(
-            format!(
-                "You used the {}, your health is now {} and your attack {}",
-                item.name, self.health, self.attack
-            )
-            .as_str(),
-            "green",
-        );
 
         self.items_held.retain(|i| i != &item);
     }

@@ -107,6 +107,14 @@ fn main() {
                     None,
                     "Armory".to_string(),
                 ),
+                Door::new(
+                    "Concert Hall".to_string(),
+                    "a room with a stage and a lot of seats".to_string(),
+                    true,
+                    Key::new("ticket to the concert hall".to_string()),
+                    None,
+                    "Concert Hall".to_string(),
+                ),
             ],
             vec![
                 Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
@@ -117,7 +125,10 @@ fn main() {
                     20,
                 ),
             ],
-            vec![Key::new("kitchen".to_string())],
+            vec![
+                Key::new("kitchen".to_string()),
+                Key::new("ticket to the concert hall".to_string()),
+            ],
         ),
     );
 
@@ -233,6 +244,104 @@ fn main() {
             vec![],
         ),
     );
+
+    rooms.insert(
+        "Concert Hall".to_string(),
+        Room::new(
+            "Concert Hall".to_string(),
+            "a room with a stage and a lot of seats".to_string(),
+            vec![
+                Door::new(
+                    "Stage".to_string(),
+                    "a room with a stage".to_string(),
+                    true,
+                    Key::new("actor's pass".to_string()),
+                    None,
+                    "Stage".to_string(),
+                ),
+                Door::new(
+                    "Backstage".to_string(),
+                    "a room with a lot of props".to_string(),
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Backstage".to_string(),
+                ),
+            ],
+            vec![],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Stage".to_string(),
+        Room::new(
+            "Stage".to_string(),
+            "a room with a stage".to_string(),
+            vec![],
+            vec![
+                Item::new("microphone".to_string(), "a microphone".to_string(), 0, 10),
+                Item::new("XLR cable".to_string(), "a mic cable".to_string(), 0, 20),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Backstage".to_string(),
+        Room::new(
+            "Backstage".to_string(),
+            "a room with a lot of props".to_string(),
+            vec![
+                Door::new(
+                    "Dressing Room".to_string(),
+                    "a room with a lot of costumes".to_string(),
+                    true,
+                    Key::new("staff pass".to_string()),
+                    Some(Player::new(
+                        "Stressed actor".to_string(),
+                        empty_map.clone(),
+                        vec![
+                            Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
+                            Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
+                        ],
+                        vec![],
+                        100,
+                        20,
+                        vec![],
+                        empty_room.clone(),
+                        "".to_string(),
+                    )),
+                    "Dressing Room".to_string(),
+                ),
+            ],
+            vec![
+                Item::new("guitar".to_string(), "a guitar".to_string(), 0, 30),
+                Item::new(
+                    "drumsticks".to_string(),
+                    "a pair of drumsticks".to_string(),
+                    0,
+                    40,
+                ),
+            ],
+            vec![
+                Key::new("staff pass".to_string()),
+            ],
+        ),
+    );
+
+    rooms.insert("Dressing Room".to_string(), Room::new(
+        "Dressing Room".to_string(),
+        "a room with a lot of costumes".to_string(),
+        vec![],
+        vec![
+            Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
+            Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
+        ],
+        vec![
+            Key::new("actor's pass".to_string()),
+        ],
+    ));
 
     let mut player = Player {
         name: "Player".to_string(),
@@ -433,7 +542,7 @@ fn main() {
                 for battle in &player.battles {
                     write(
                         format!(
-                            "You fought {} and {}. You had {} health and they had {} health.",
+                            "You fought \"{}\" and {}. You had {} health and they had {} health.",
                             battle.enemy_name,
                             if battle.winner { "won" } else { "lost" },
                             battle.player_health,
@@ -469,8 +578,13 @@ fn main() {
             }
 
             _ => {
-                write("I don't understand that command. Try using `help` if you need it!", "red");
+                write(
+                    "I don't understand that command. Try using `help` if you need it!",
+                    "red",
+                );
             }
         }
     }
 }
+
+// TODO: add a notice during searching that informs the user if a door is guarded by an enemy
