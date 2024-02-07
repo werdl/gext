@@ -66,11 +66,12 @@ impl Room {
 }
 
 impl BattleResult {
-    pub fn new(winner: bool, player_health: i32, enemy_health: i32) -> BattleResult {
+    pub fn new(winner: bool, player_health: i32, enemy_health: i32, enemy_name: String) -> BattleResult {
         BattleResult {
             winner,
             player_health,
             enemy_health,
+            enemy_name
         }
     }
 }
@@ -185,23 +186,23 @@ impl Player {
             self.health -= enemy_attack;
 
             if self.health <= 0 {
-                self.battles.push(BattleResult::new(false, 0, enemy_health));
+                self.battles.push(BattleResult::new(false, 0, enemy_health, enemy.name.clone()));
 
                 self.health = initial_health;
                 self.attack = initial_attack;
 
-                return BattleResult::new(false, 0, enemy_health);
+                return BattleResult::new(false, 0, enemy_health, enemy.name.clone());
             }
 
             enemy_health -= player_attack;
 
             if enemy_health <= 0 {
-                self.battles.push(BattleResult::new(true, self.health, 0));
+                self.battles.push(BattleResult::new(true, self.health, 0, enemy.name.clone()));
 
                 self.health = initial_health;
                 self.attack = initial_attack;
 
-                return BattleResult::new(true, self.health, 0);
+                return BattleResult::new(true, self.health, 0, enemy.name.clone());
             }
 
             player_attack = self.attack + rng.gen_range(-(self.attack / 4)..(self.attack / 4));
@@ -262,7 +263,7 @@ impl Player {
             vec!["telephone".to_string()],
         );
         questions.insert(
-            "Mississippi has three 'i's and four 's's. Now, without using 'i' or 's', spell it."
+            "Mississippi has two 'p's and four 's's. Now, without using 'p' or 's', spell it."
                 .to_string(),
             vec!["it".to_string()],
         );
@@ -308,7 +309,9 @@ impl Player {
                         let result = self.fight(enemy);
 
                         if result.winner {
-                            write("You won the fight!", "green");
+                            write("You won the fight! You gain an extra 15% health and 10% attack.", "green");
+                            self.health += (self.health as f32 * 0.15) as i32;
+                            self.attack += (self.attack as f32 * 0.10) as i32;
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
                             write(

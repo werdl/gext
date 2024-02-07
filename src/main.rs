@@ -50,6 +50,8 @@ fn main() {
         keys: vec![],
     };
 
+    let empty_map: HashMap<String, Room> = HashMap::new();
+
     let mut rooms = HashMap::new();
 
     rooms.insert(
@@ -57,14 +59,24 @@ fn main() {
         Room::new(
             "Kitchen".to_string(),
             "a room with a stove and a fridge".to_string(),
-            vec![Door::new(
-                "Pantry".to_string(),
-                "a room with a lot of food".to_string(),
-                true,
-                Key::new("pantry".to_string()),
-                None,
-                "Pantry".to_string(),
-            )],
+            vec![
+                Door::new(
+                    "Pantry".to_string(),
+                    "a room with a lot of food".to_string(),
+                    true,
+                    Key::new("pantry".to_string()),
+                    None,
+                    "Pantry".to_string(),
+                ),
+                Door::new(
+                    "Dining Room".to_string(),
+                    "a room with a table and chairs".to_string(),
+                    false,
+                    Key::new("dining room".to_string()),
+                    None,
+                    "Dining Room".to_string(),
+                ),
+            ],
             vec![
                 Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
                 Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
@@ -109,8 +121,6 @@ fn main() {
         ),
     );
 
-    let empty_map: HashMap<String, Room> = HashMap::new();
-
     rooms.insert(
         "Armory".to_string(),
         Room::new(
@@ -122,18 +132,14 @@ fn main() {
                 true,
                 Key::new("trophy cupboard".to_string()),
                 Some(Player::new(
-                    "Enemy".to_string(),
+                    "Trophy Keeper".to_string(),
                     empty_map.clone(),
                     vec![],
                     vec![],
                     100,
                     20,
                     vec![],
-                    rooms
-                        .clone()
-                        .entry("Trophy Cupboard".to_string())
-                        .or_insert(empty_room.clone())
-                        .clone(),
+                    empty_room.clone(),
                     "".to_string(),
                 )),
                 "Trophy Cupboard".to_string(),
@@ -159,7 +165,7 @@ fn main() {
                 Item::new("trophy".to_string(), "a golden trophy".to_string(), 30, 0),
                 Item::new("bow".to_string(), "a bow".to_string(), 0, 30),
             ],
-            vec![Key::new("armory key".to_string())],
+            vec![Key::new("silverware drawer".to_string())],
         ),
     );
 
@@ -168,10 +174,61 @@ fn main() {
         Room::new(
             "Pantry".to_string(),
             "a room with a lot of food".to_string(),
-            vec![],
+            vec![Door::new(
+                "Silverware Drawer".to_string(),
+                "a room with a lot of silverware".to_string(),
+                true,
+                Key::new("silverware drawer".to_string()),
+                Some(Player::new(
+                    "Silverware Demon".to_string(),
+                    empty_map.clone(),
+                    vec![],
+                    vec![],
+                    100,
+                    20,
+                    vec![],
+                    empty_room.clone(),
+                    "".to_string(),
+                )),
+                "Silverware Drawer".to_string(),
+            )],
             vec![
                 Item::new("bread".to_string(), "a loaf of bread".to_string(), 10, 0),
                 Item::new("dagger".to_string(), "a sharp dagger".to_string(), 0, 10),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Silverware Drawer".to_string(),
+        Room::new(
+            "Silverware Drawer".to_string(),
+            "a room with a lot of silverware".to_string(),
+            vec![],
+            vec![
+                Item::new("fork".to_string(), "a fork".to_string(), 5, 0),
+                Item::new("knife".to_string(), "a knife".to_string(), 0, 5),
+                Item::new(
+                    "Grandma's Special Spoon".to_string(),
+                    "a spoon".to_string(),
+                    0,
+                    50,
+                ),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Dining Room".to_string(),
+        Room::new(
+            "Dining Room".to_string(),
+            "a room with a table and chairs".to_string(),
+            vec![],
+            vec![
+                Item::new("chair".to_string(), "a chair".to_string(), 0, 0),
+                Item::new("tablecloth".to_string(), "a table".to_string(), 0, 20),
             ],
             vec![],
         ),
@@ -281,6 +338,12 @@ fn main() {
                         "green"
                     );
                 }
+
+                out!(
+                    format!("If you can't figure out what to do, try using `search`!\nStuck for a key? Make sure to look around!",)
+                        .as_str(),
+                    "cyan"
+                )
             }
 
             "look" => {
@@ -362,10 +425,6 @@ fn main() {
                 }
             }
 
-            "help" => {
-                out!(format!("").as_str())
-            }
-
             "save" => {
                 player.save();
             }
@@ -374,8 +433,11 @@ fn main() {
                 for battle in &player.battles {
                     write(
                         format!(
-                            "You fought an enemy and {}",
-                            if battle.winner { "won" } else { "lost" }
+                            "You fought {} and {}. You had {} health and they had {} health.",
+                            battle.enemy_name,
+                            if battle.winner { "won" } else { "lost" },
+                            battle.player_health,
+                            battle.enemy_health
                         )
                         .as_str(),
                         "green",
@@ -407,7 +469,7 @@ fn main() {
             }
 
             _ => {
-                write("I don't understand that command.", "red");
+                write("I don't understand that command. Try using `help` if you need it!", "red");
             }
         }
     }

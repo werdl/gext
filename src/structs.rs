@@ -58,4 +58,6 @@ pub struct BattleResult {
     pub winner: bool,
     pub player_health: i32,
     pub enemy_health: i32,
+
+    pub enemy_name: String,
 }
