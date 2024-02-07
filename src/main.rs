@@ -49,7 +49,7 @@ struct Door {
 
     enemy: Option<Player>,
 
-    associated_room: Room,
+    associated_room_name: String,
 }
 
 impl Door {
@@ -59,7 +59,7 @@ impl Door {
         locked: bool,
         key: Key,
         enemy: Option<Player>,
-        associated_room: Room,
+        associated_room_name: String,
     ) -> Door {
         Door {
             name,
@@ -67,7 +67,7 @@ impl Door {
             locked,
             key,
             enemy,
-            associated_room,
+            associated_room_name,
         }
     }
 }
@@ -102,7 +102,9 @@ impl Room {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Player {
     name: String,
-    rooms_cleared: Vec<Room>,
+
+    map: HashMap<String, Room>,
+
     items_held: Vec<Item>,
     keys_held: Vec<Key>,
     health: i32,
@@ -132,6 +134,29 @@ impl BattleResult {
 }
 
 impl Player {
+    fn new(
+        name: String,
+        map: HashMap<String, Room>,
+        items_held: Vec<Item>,
+        keys_held: Vec<Key>,
+        health: i32,
+        attack: i32,
+        is_dead: bool,
+        battles: Vec<BattleResult>,
+        current_room: Room,
+    ) -> Player {
+        Player {
+            name,
+            map,
+            items_held,
+            keys_held,
+            health,
+            attack,
+            is_dead,
+            battles,
+            current_room,
+        }
+    }
     fn fight(&mut self, enemy: &Player) -> BattleResult {
         let mut rng = rand::thread_rng();
 
@@ -181,7 +206,14 @@ impl Player {
                     write("Which item do you want to use?", "magenta");
 
                     for item in &self.items_held {
-                        write(format!("You have the {}, which buffs you {} health and {} attack", item.name, item.health, item.attack).as_str(), "magenta");
+                        write(
+                            format!(
+                                "You have the {}, which buffs you {} health and {} attack",
+                                item.name, item.health, item.attack
+                            )
+                            .as_str(),
+                            "magenta",
+                        );
                     }
 
                     let input = Term::stdout().read_line().unwrap();
@@ -208,14 +240,16 @@ impl Player {
             self.health -= enemy_attack;
 
             if self.health <= 0 {
-                self.battles.push(BattleResult::new(false, self.health, enemy_health));
+                self.battles
+                    .push(BattleResult::new(false, self.health, enemy_health));
                 return BattleResult::new(false, self.health, enemy_health);
             }
 
             enemy_health -= player_attack;
 
             if enemy_health <= 0 {
-                self.battles.push(BattleResult::new(true, self.health, enemy_health));
+                self.battles
+                    .push(BattleResult::new(true, self.health, enemy_health));
                 return BattleResult::new(true, self.health, enemy_health);
             }
 
@@ -322,14 +356,14 @@ impl Player {
                     }
 
                     let old_room = self.current_room.clone();
-                    self.current_room = door.associated_room.clone();
 
-                    if self
+                    self.current_room = self.map.get(&door.associated_room_name).unwrap().clone();
+
+                    if !self
                         .current_room
                         .doors
                         .iter()
-                        .find(|d| d.name == old_room.name)
-                        .is_none()
+                        .any(|d| d.associated_room_name == old_room.name)
                     {
                         self.current_room.doors.push(Door::new(
                             old_room.name.clone(),
@@ -337,7 +371,7 @@ impl Player {
                             false,
                             Key::new("".to_string()),
                             None,
-                            old_room,
+                            old_room.name.clone(),
                         ));
                     }
                 }
@@ -377,6 +411,11 @@ impl Player {
         }
 
         self.current_room.items.retain(|i| i.name != item_name);
+        self.map
+            .get_mut(&self.current_room.name)
+            .unwrap()
+            .items
+            .retain(|i| i.name != item_name);
     }
 
     fn use_item(&mut self, item: Item) {
@@ -414,6 +453,11 @@ impl Player {
         }
 
         self.current_room.keys.retain(|k| k.name != key_name);
+        self.map
+            .get_mut(&self.current_room.name)
+            .unwrap()
+            .keys
+            .retain(|k| k.name != key_name);
     }
 
     fn save(&self) {
@@ -485,106 +529,126 @@ fn main() {
         keys: vec![],
     };
 
-    let room = Room {
-        name: "Entrance Hall".to_string(),
-        description: "the first room - the entrance hall".to_string(),
-        doors: vec![
-            Door::new(
-                "Kitchen".to_string(),
-                "a door to the kitchen".to_string(),
-                true,
-                Key::new("kitchen key".to_string()),
-                None,
-                Room::new(
+    let mut rooms = HashMap::new();
+
+    rooms.insert(
+        "Kitchen".to_string(),
+        Room::new(
+            "Kitchen".to_string(),
+            "a room with a stove and a fridge".to_string(),
+            vec![],
+            vec![
+                Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
+                Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Entrance Hall".to_string(),
+        Room::new(
+            "Entrance Hall".to_string(),
+            "the first room - the entrance hall".to_string(),
+            vec![
+                Door::new(
                     "Kitchen".to_string(),
                     "a room with a stove and a fridge".to_string(),
-                    vec![],
-                    vec![
-                        Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
-                        Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
-                    ],
-                    vec![],
+                    true,
+                    Key::new("kitchen key".to_string()),
+                    None,
+                    "Kitchen".to_string(),
                 ),
-            ),
-            Door::new(
-                "Armoury".to_string(),
-                "a door to the armoury".to_string(),
-                true,
-                Key::new("armoury".to_string()),
-                None,
-                Room::new(
-                    "Armoury".to_string(),
+                Door::new(
+                    "Armory".to_string(),
                     "a room with a lot of weapons".to_string(),
-                    vec![Door::new(
-                        "Trophy Cupboard".to_string(),
-                        "a door to the trophy cupboard".to_string(),
-                        true,
-                        Key::new("trophy cupboard".to_string()),
-                        Some(Player {
-                            name: "Enemy".to_string(),
-                            rooms_cleared: vec![],
-                            items_held: vec![],
-                            keys_held: vec![],
-                            health: 100,
-                            attack: 10,
-                            is_dead: false,
-                            battles: vec![],
-                            current_room: empty_room.clone(),
-                        }),
-                        Room::new(
-                            "Trophy Cupboard".to_string(),
-                            "a room with a lot of trophies".to_string(),
-                            vec![],
-                            vec![Item::new(
-                                "trophy".to_string(),
-                                "a shiny trophy showcasing your victory!".to_string(),
-                                40,
-                                0,
-                            )],
-                            vec![],
-                        ),
-                    )],
-                    vec![Item::new(
-                        "shield".to_string(),
-                        "a strong shield".to_string(),
-                        0,
-                        20,
-                    )],
-                    vec![Key::new("trophy cupboard".to_string())],
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Armory".to_string(),
                 ),
-            ),
-        ],
-        items: vec![
-            Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
-            Item::new(
-                "poison vial".to_string(),
-                "a poisonous liquid that can be used to throw at your enemy".to_string(),
-                0,
-                20,
-            ),
-        ],
-        keys: vec![
-            Key::new("kitchen key".to_string()),
-            Key::new("armoury".to_string()),
-        ],
-    };
+            ],
+            vec![
+                Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
+                Item::new(
+                    "poison vial".to_string(),
+                    "a poisonous liquid that can be used to throw at your enemy".to_string(),
+                    0,
+                    20,
+                ),
+            ],
+            vec![Key::new("kitchen key".to_string())],
+        ),
+    );
+
+    rooms.insert(
+        "Armory".to_string(),
+        Room::new(
+            "Armory".to_string(),
+            "a room with a lot of weapons".to_string(),
+            vec![Door::new(
+                "Trophy Cupboard".to_string(),
+                "a room with a lot of trophies".to_string(),
+                true,
+                Key::new("armory key".to_string()),
+                Some(Player::new(
+                    "Enemy".to_string(),
+                    rooms.clone(), // TODO make enemy map empty
+                    vec![],
+                    vec![],
+                    100,
+                    20,
+                    false,
+                    vec![],
+                    rooms
+                        .clone()
+                        .entry("Trophy Cupboard".to_string())
+                        .or_insert(empty_room.clone())
+                        .clone(),
+                )),
+                "Trophy Cupboard".to_string(),
+            )],
+            vec![
+                Item::new("shield".to_string(), "a shield".to_string(), 20, 0),
+                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 20),
+            ],
+            vec![Key::new("entrance hall key".to_string())],
+        ),
+    );
+
+    rooms.insert(
+        "Trophy Cupboard".to_string(),
+        Room::new(
+            "Trophy Cupboard".to_string(),
+            "a room with a lot of trophies".to_string(),
+            vec![],
+            vec![
+                Item::new("trophy".to_string(), "a golden trophy".to_string(), 30, 0),
+                Item::new("bow".to_string(), "a bow".to_string(), 0, 30),
+            ],
+            vec![Key::new("armory key".to_string())],
+        ),
+    );
 
     let mut player = Player {
         name: "Player".to_string(),
-        rooms_cleared: vec![],
+        map: rooms.clone(),
         items_held: vec![],
         keys_held: vec![],
         health: 100,
         attack: 10,
         is_dead: false,
         battles: vec![],
-        current_room: room,
+        current_room: rooms
+            .clone()
+            .entry("Entrance Hall".to_string())
+            .or_insert(empty_room.clone())
+            .clone(),
     };
 
     if let Ok(file) = File::open("savegame.json") {
         player = serde_json::from_reader(file).unwrap();
 
-        let term = Term::stdout();
         write(
             format!("You are in the {}", player.current_room.name).as_str(),
             "blue",
