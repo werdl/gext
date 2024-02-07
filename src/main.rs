@@ -57,7 +57,14 @@ fn main() {
         Room::new(
             "Kitchen".to_string(),
             "a room with a stove and a fridge".to_string(),
-            vec![],
+            vec![Door::new(
+                "Pantry".to_string(),
+                "a room with a lot of food".to_string(),
+                true,
+                Key::new("pantry".to_string()),
+                None,
+                "Pantry".to_string(),
+            )],
             vec![
                 Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
                 Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
@@ -76,7 +83,7 @@ fn main() {
                     "Kitchen".to_string(),
                     "a room with a stove and a fridge".to_string(),
                     true,
-                    Key::new("kitchen key".to_string()),
+                    Key::new("kitchen".to_string()),
                     None,
                     "Kitchen".to_string(),
                 ),
@@ -135,7 +142,10 @@ fn main() {
                 Item::new("shield".to_string(), "a shield".to_string(), 20, 0),
                 Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 20),
             ],
-            vec![Key::new("trophy cupboard".to_string())],
+            vec![
+                Key::new("trophy cupboard".to_string()),
+                Key::new("pantry".to_string()),
+            ],
         ),
     );
 
@@ -150,6 +160,20 @@ fn main() {
                 Item::new("bow".to_string(), "a bow".to_string(), 0, 30),
             ],
             vec![Key::new("armory key".to_string())],
+        ),
+    );
+
+    rooms.insert(
+        "Pantry".to_string(),
+        Room::new(
+            "Pantry".to_string(),
+            "a room with a lot of food".to_string(),
+            vec![],
+            vec![
+                Item::new("bread".to_string(), "a loaf of bread".to_string(), 10, 0),
+                Item::new("dagger".to_string(), "a sharp dagger".to_string(), 0, 10),
+            ],
+            vec![],
         ),
     );
 
@@ -218,6 +242,45 @@ fn main() {
                 write("Goodbye!", "green");
                 player.save();
                 break;
+            }
+
+            "help" => {
+                out!(
+                    format!(
+                        "
+{}
+- look: print the description of the room
+- go [room]: move to another room (checks if you have the key)
+- take [item]: take an item
+- takekey [key]: take a key
+- search: search the room for items, keys, and doors
+- save: save the game
+- battles: print the battles you've fought
+- inventory: print the items and keys you have",
+                        style("Commands:").bold()
+                    )
+                    .as_str(),
+                    "green"
+                );
+
+                if std::env::args()
+                    .collect::<Vec<String>>()
+                    .contains(&"--debug".to_string())
+                    || std::env::args()
+                        .collect::<Vec<String>>()
+                        .contains(&"-d".to_string())
+                {
+                    out!(
+                        format!(
+                            "{}
+- debug: print the current room's data
+- use [item]: use an item",
+                            style("Debug Commands:").bold()
+                        )
+                        .as_str(),
+                        "green"
+                    );
+                }
             }
 
             "look" => {

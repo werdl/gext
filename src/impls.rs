@@ -253,6 +253,23 @@ impl Player {
             "What has a head and a tail but no body?".to_string(),
             vec!["coin".to_string()],
         );
+        questions.insert(
+            "What has a tongue but cannot talk?".to_string(),
+            vec!["shoe".to_string()],
+        );
+        questions.insert(
+            "What has a ring but no finger?".to_string(),
+            vec!["telephone".to_string()],
+        );
+        questions.insert(
+            "Mississippi has three 'i's and four 's's. Now, without using 'i' or 's', spell it."
+                .to_string(),
+            vec!["it".to_string()],
+        );
+        questions.insert(
+            "A man in a car saw a golden door, a silver door, and a bronze door. What door did he open first?".to_string(),
+            vec!["car door".to_string(), "car".to_string()],
+        );
 
         let mut rng = rand::thread_rng();
 
@@ -306,6 +323,8 @@ impl Player {
                         }
                     }
 
+
+
                     let old_room = self.current_room.clone();
 
                     self.current_room = self.map.get(&door.associated_room_name).unwrap().clone();
@@ -324,6 +343,23 @@ impl Player {
                             None,
                             old_room.name.clone(),
                         ));
+                    }
+
+                    for room in self.map.clone().values() {
+                        for door in &room.doors {
+                            if door.associated_room_name == self.current_room.name && !self.current_room.doors.iter().any(|d| d.name == room.name){
+                                self.current_room.doors.push(
+                                    Door::new(
+                                        room.name.clone(),
+                                        format!("a door to the {}", room.name),
+                                        false,
+                                        Key::new("".to_string()),
+                                        None,
+                                        room.name.clone(),
+                                    ),
+                                );
+                            }
+                        }
                     }
                 }
             }
