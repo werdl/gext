@@ -115,6 +115,14 @@ fn main() {
                     None,
                     "Concert Hall".to_string(),
                 ),
+                Door::new(
+                    "Forest".to_string(),
+                    "a room with a lot of trees".to_string(),
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Forest".to_string(),
+                ),
             ],
             vec![
                 Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
@@ -133,6 +141,66 @@ fn main() {
     );
 
     rooms.insert(
+        "Forest Cabin".to_string(),
+        Room::new(
+            "Forest Cabin".to_string(),
+            "a little hideaway".to_string(),
+            vec![],
+            vec![
+                Item::new("beans".to_string(), "a can of beans".to_string(), 10, 0),
+                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 10),
+                Item::new("beanbag".to_string(), "a beanbag".to_string(), 20, 10),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Forest Clearing".to_string(),
+        Room::new(
+            "Forest Clearing".to_string(),
+            "a room with a lot of trees and a clearing".to_string(),
+            vec![Door::new(
+                "Forest Cabin".to_string(),
+                "a little hideaway".to_string(),
+                true,
+                Key::new("cabin weekend pass".to_string()),
+                None,
+                "Forest Cabin".to_string(),
+            )],
+            vec![
+                Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
+                Item::new("rock".to_string(), "a rock".to_string(), 5, 0),
+                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0),
+                Item::new("berry".to_string(), "a berry".to_string(), 10, 0),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Forest".to_string(),
+        Room::new(
+            "Forest".to_string(),
+            "a room with a lot of trees".to_string(),
+            vec![],
+            vec![
+                Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
+                Item::new("rock".to_string(), "a rock".to_string(), 5, 0),
+                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0),
+                Item::new("berry".to_string(), "a berry".to_string(), 10, 0),
+                Item::new(
+                    "felled tree".to_string(),
+                    "a felled tree".to_string(),
+                    0,
+                    50,
+                ),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
         "Jousting Store".to_string(),
         Room::new(
             "Jousting Store".to_string(),
@@ -147,7 +215,7 @@ fn main() {
                     100,
                 ),
             ],
-            vec![],
+            vec![Key::new("cabin weekend pass".to_string())],
         ),
     );
 
@@ -590,7 +658,11 @@ fn main() {
             "search" => {
                 for item in &player.current_room.items {
                     write(
-                        format!("You see \"{}\" (item) that buffs {} health and {} attack", item.name, item.health, item.attack).as_str(),
+                        format!(
+                            "You see \"{}\" (item) that buffs {} health and {} attack",
+                            item.name, item.health, item.attack
+                        )
+                        .as_str(),
                         "green",
                     );
                 }
@@ -644,7 +716,11 @@ fn main() {
             "inventory" => {
                 for item in &player.items_held {
                     write(
-                        format!("You have the \"{}\" (item) that buffs {} health and {} attack", item.name, item.health, item.attack).as_str(),
+                        format!(
+                            "You have the \"{}\" (item) that buffs {} health and {} attack",
+                            item.name, item.health, item.attack
+                        )
+                        .as_str(),
                         "green",
                     );
                 }

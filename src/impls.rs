@@ -343,11 +343,11 @@ impl Player {
 
                         if result.winner {
                             write(
-                                "You won the fight! You gain an extra 15% health and 10% attack.",
+                                "You won the fight! You gain an extra 15% health and 25% attack.",
                                 "green",
                             );
                             self.health += (self.health as f32 * 0.15) as i32;
-                            self.attack += (self.attack as f32 * 0.10) as i32;
+                            self.attack += (self.attack as f32 * 0.25) as i32;
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
                             write(
