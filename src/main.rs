@@ -8,7 +8,7 @@ use std::fs::File;
 mod impls;
 mod structs;
 
-use structs::{Door, Item, Key, Player, Room};
+use structs::{Door, Item, Key, Player, Room, RoomRequirements};
 
 fn write(text: &str, color: &str) {
     let term = Term::stdout();
@@ -67,6 +67,7 @@ fn main() {
                     Key::new("pantry".to_string()),
                     None,
                     "Pantry".to_string(),
+                    None,
                 ),
                 Door::new(
                     "Dining Room".to_string(),
@@ -75,13 +76,14 @@ fn main() {
                     Key::new("dining room".to_string()),
                     None,
                     "Dining Room".to_string(),
+                    None,
                 ),
             ],
             vec![
                 Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
                 Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
             ],
-            vec![],
+            vec![Key::new("elf basement".to_string())],
         ),
     );
 
@@ -98,6 +100,7 @@ fn main() {
                     Key::new("kitchen".to_string()),
                     None,
                     "Kitchen".to_string(),
+                    None,
                 ),
                 Door::new(
                     "Armory".to_string(),
@@ -106,6 +109,7 @@ fn main() {
                     Key::new("".to_string()),
                     None,
                     "Armory".to_string(),
+                    None,
                 ),
                 Door::new(
                     "Concert Hall".to_string(),
@@ -114,6 +118,7 @@ fn main() {
                     Key::new("ticket to the concert hall".to_string()),
                     None,
                     "Concert Hall".to_string(),
+                    None,
                 ),
                 Door::new(
                     "Forest".to_string(),
@@ -122,6 +127,7 @@ fn main() {
                     Key::new("".to_string()),
                     None,
                     "Forest".to_string(),
+                    None,
                 ),
             ],
             vec![
@@ -141,11 +147,72 @@ fn main() {
     );
 
     rooms.insert(
+        "Elf Treehouse".to_string(),
+        Room::new(
+            "Elf Treehouse".to_string(),
+            "a treehouse full of elves".to_string(),
+            vec![Door::new(
+                "Elf Basement".to_string(),
+                "a basement full of elves".to_string(),
+                true,
+                Key::new("elf basement".to_string()),
+                Some(Player::new(
+                    "Elf".to_string(),
+                    empty_map.clone(),
+                    vec![],
+                    vec![],
+                    800,
+                    200,
+                    vec![],
+                    empty_room.clone(),
+                    "".to_string(),
+                )),
+                "Elf Basement".to_string(),
+                None,
+            )],
+            vec![
+                Item::new("elf hat".to_string(), "a hat".to_string(), 0, 10),
+                Item::new(
+                    "elf shoes".to_string(),
+                    "a pair of shoes".to_string(),
+                    10,
+                    0,
+                ),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Elf Basement".to_string(),
+        Room::new(
+            "Elf Basement".to_string(),
+            "a basement full of elves".to_string(),
+            vec![],
+            vec![Item::new(
+                "elven scythe".to_string(),
+                "a scythe".to_string(),
+                0,
+                70,
+            )],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
         "Forest Cabin".to_string(),
         Room::new(
             "Forest Cabin".to_string(),
             "a little hideaway".to_string(),
-            vec![],
+            vec![Door::new(
+                "Elf Treehouse".to_string(),
+                "a treehouse full of elves".to_string(),
+                false,
+                Key::new("".to_string()),
+                None,
+                "Elf Treehouse".to_string(),
+                None,
+            )],
             vec![
                 Item::new("beans".to_string(), "a can of beans".to_string(), 10, 0),
                 Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 10),
@@ -167,6 +234,7 @@ fn main() {
                 Key::new("cabin weekend pass".to_string()),
                 None,
                 "Forest Cabin".to_string(),
+                None,
             )],
             vec![
                 Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
@@ -183,7 +251,15 @@ fn main() {
         Room::new(
             "Forest".to_string(),
             "a room with a lot of trees".to_string(),
-            vec![],
+            vec![Door::new(
+                "Forest Clearing".to_string(),
+                "a room with a lot of trees and a clearing".to_string(),
+                false,
+                Key::new("".to_string()),
+                None,
+                "Forest Clearing".to_string(),
+                None,
+            )],
             vec![
                 Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
                 Item::new("rock".to_string(), "a rock".to_string(), 5, 0),
@@ -241,6 +317,12 @@ fn main() {
                     "".to_string(),
                 )),
                 "Armory".to_string(),
+                Some(
+                    RoomRequirements {
+                        health: 400,
+                        attack: 60,
+                    },
+                ),
             )],
             vec![
                 Item::new("lance".to_string(), "a lance".to_string(), 0, 20),
@@ -272,6 +354,7 @@ fn main() {
                     "".to_string(),
                 )),
                 "Trophy Cupboard".to_string(),
+                None,
             )],
             vec![
                 Item::new("shield".to_string(), "a shield".to_string(), 20, 0),
@@ -320,6 +403,7 @@ fn main() {
                     "".to_string(),
                 )),
                 "Silverware Drawer".to_string(),
+                None,
             )],
             vec![
                 Item::new("bread".to_string(), "a loaf of bread".to_string(), 10, 0),
@@ -376,6 +460,12 @@ fn main() {
                     Key::new("actor's pass".to_string()),
                     None,
                     "Stage".to_string(),
+                    Some(
+                        RoomRequirements {
+                            health: 300,
+                            attack: 0,
+                        },
+                    ),
                 ),
                 Door::new(
                     "Backstage".to_string(),
@@ -384,6 +474,7 @@ fn main() {
                     Key::new("".to_string()),
                     None,
                     "Backstage".to_string(),
+                    None,
                 ),
             ],
             vec![],
@@ -431,6 +522,7 @@ fn main() {
                         "".to_string(),
                     )),
                     "Dressing Room".to_string(),
+                    None,
                 ),
                 Door::new(
                     "Tech Room".to_string(),
@@ -439,6 +531,7 @@ fn main() {
                     Key::new("".to_string()),
                     None,
                     "Tech Room".to_string(),
+                    None,
                 ),
             ],
             vec![
@@ -506,7 +599,7 @@ fn main() {
             .entry("Entrance Hall".to_string())
             .or_insert(empty_room.clone())
             .clone(),
-        game_name: "The Game".to_string(),
+        game_name: "".to_string(),
     };
 
     out!("Would you like to load a savegame? (y/n)", "yellow");
@@ -572,7 +665,8 @@ fn main() {
 - search: search the room for items, keys, and doors
 - save: save the game
 - battles: print the battles you've fought
-- inventory: print the items and keys you have",
+- inventory: print the items and keys you have
+- use: use an item now, but for only half the effect",
                         style("Commands:").bold()
                     )
                     .as_str(),
@@ -642,7 +736,12 @@ fn main() {
 
                     match item_from_inventory {
                         Some(item) => {
-                            player.use_item(item.clone());
+                            player.use_item(Item::new(
+                                item.name.clone(),
+                                item.description.clone(),
+                                item.health / 2 as i32,
+                                item.attack / 2 as i32,
+                            ));
                         }
                         None => {
                             write("You don't have that item.", "red");
@@ -681,7 +780,7 @@ fn main() {
                             } else {
                                 "unlocked"
                             },
-                            if door.enemy.is_some() {
+                            if door.enemy.is_some() && !player.battles.iter().any(|b| b.enemy_name == door.enemy.clone().unwrap().name) {
                                 "guarded"
                             } else {
                                 "unguarded"

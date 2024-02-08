@@ -2,6 +2,12 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize)]
+pub struct RoomRequirements {
+    pub health: i32,
+    pub attack: i32,
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize)]
 pub struct Key {
     pub name: String,
 }
@@ -24,6 +30,8 @@ pub struct Door {
     pub enemy: Option<Player>,
 
     pub associated_room_name: String,
+
+    pub requirements: Option<RoomRequirements>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

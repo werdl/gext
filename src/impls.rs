@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use console::Term;
 
-use crate::structs::{BattleResult, Door, Item, Key, Player, Room};
+use crate::structs::{BattleResult, Door, Item, Key, Player, Room, RoomRequirements};
 
 use crate::write;
 
@@ -35,6 +35,7 @@ impl Door {
         key: Key,
         enemy: Option<Player>,
         associated_room_name: String,
+        requirements: Option<RoomRequirements>,
     ) -> Door {
         Door {
             name,
@@ -43,6 +44,7 @@ impl Door {
             key,
             enemy,
             associated_room_name,
+            requirements,
         }
     }
 }
@@ -179,7 +181,8 @@ impl Player {
                                 format!(
                                     "You used the {}, which buffs you {} health and {} attack",
                                     item.name, item.health, item.attack
-                                ).as_str(),
+                                )
+                                .as_str(),
                                 "green",
                             );
                             self.use_item(item.clone());
@@ -338,16 +341,23 @@ impl Player {
                     write("The door is locked.", "red");
                     return;
                 } else {
-                    if let Some(enemy) = &mut door.enemy.clone() {
+                    if let Some(requirements) = &door.requirements {
+                        if self.health < requirements.health || self.attack < requirements.attack {
+                            write(format!("You don't meet the requirements to go through this door. It needs {} attack and {} health, whereas you only have {} attack and {} health.", requirements.attack, requirements.health, self.attack, self.health).as_str(), "red");
+                            return;
+                        }
+                    }
+                    if door.enemy.is_some() && !self.battles.iter().any(|b| b.enemy_name == door.enemy.clone().unwrap().name){
+                        let enemy = &mut door.enemy.clone().unwrap();
                         let result = self.fight(enemy);
 
                         if result.winner {
                             write(
-                                "You won the fight! You gain an extra 15% health and 25% attack.",
+                                "You won the fight! You gain the enemy's health and attack they had at the start of the fight.",
                                 "green",
                             );
-                            self.health += (self.health as f32 * 0.15) as i32;
-                            self.attack += (self.attack as f32 * 0.25) as i32;
+                            self.health += enemy.health;
+                            self.attack += enemy.attack;
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
                             write(
@@ -379,6 +389,7 @@ impl Player {
                             Key::new("".to_string()),
                             None,
                             old_room.name.clone(),
+                            None,
                         ));
                     }
 
@@ -394,6 +405,7 @@ impl Player {
                                     Key::new("".to_string()),
                                     None,
                                     room.name.clone(),
+                                    None,
                                 ));
                             }
                         }
