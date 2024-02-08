@@ -314,6 +314,14 @@ fn main() {
                     )),
                     "Dressing Room".to_string(),
                 ),
+                Door::new(
+                    "Tech Room".to_string(),
+                    "a room with a lot of tech".to_string(),
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Tech Room".to_string(),
+                ),
             ],
             vec![
                 Item::new("guitar".to_string(), "a guitar".to_string(), 0, 30),
@@ -341,6 +349,18 @@ fn main() {
         vec![
             Key::new("actor's pass".to_string()),
         ],
+    ));
+
+    rooms.insert("Tech Room".to_string(), Room::new(
+        "Tech Room".to_string(),
+        "a room with a lot of tech".to_string(),
+        vec![],
+        vec![
+            Item::new("laptop".to_string(), "a laptop".to_string(), 0, 30),
+            Item::new("headphones".to_string(), "a pair of headphones".to_string(), 20, 0),
+            Item::new("sound board".to_string(), "a sound board".to_string(), 0, 50),
+        ],
+        vec![],
     ));
 
     let mut player = Player {

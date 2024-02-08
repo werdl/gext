@@ -1,0 +1,473 @@
+{
+    "name": "bob",
+    "map": {
+        "Tech Room": {
+            "name": "Tech Room",
+            "description": "a room with a lot of tech",
+            "doors": [],
+            "items": [],
+            "keys": []
+        },
+        "Dining Room": {
+            "name": "Dining Room",
+            "description": "a room with a table and chairs",
+            "doors": [],
+            "items": [
+                {
+                    "name": "chair",
+                    "description": "a chair",
+                    "health": 0,
+                    "attack": 0
+                },
+                {
+                    "name": "tablecloth",
+                    "description": "a table",
+                    "health": 0,
+                    "attack": 20
+                }
+            ],
+            "keys": []
+        },
+        "Stage": {
+            "name": "Stage",
+            "description": "a room with a stage",
+            "doors": [],
+            "items": [],
+            "keys": []
+        },
+        "Backstage": {
+            "name": "Backstage",
+            "description": "a room with a lot of props",
+            "doors": [
+                {
+                    "name": "Dressing Room",
+                    "description": "a room with a lot of costumes",
+                    "locked": true,
+                    "key": {
+                        "name": "staff pass"
+                    },
+                    "enemy": {
+                        "name": "Stressed actor",
+                        "map": {},
+                        "items_held": [
+                            {
+                                "name": "costume",
+                                "description": "a costume",
+                                "health": 20,
+                                "attack": 0
+                            },
+                            {
+                                "name": "makeup",
+                                "description": "a makeup kit",
+                                "health": 0,
+                                "attack": 5
+                            }
+                        ],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Dressing Room"
+                },
+                {
+                    "name": "Tech Room",
+                    "description": "a room with a lot of tech",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Tech Room"
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Silverware Drawer": {
+            "name": "Silverware Drawer",
+            "description": "a room with a lot of silverware",
+            "doors": [],
+            "items": [],
+            "keys": []
+        },
+        "Entrance Hall": {
+            "name": "Entrance Hall",
+            "description": "the first room - the entrance hall",
+            "doors": [
+                {
+                    "name": "Kitchen",
+                    "description": "a room with a stove and a fridge",
+                    "locked": true,
+                    "key": {
+                        "name": "kitchen"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Kitchen"
+                },
+                {
+                    "name": "Armory",
+                    "description": "a room with a lot of weapons",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Armory"
+                },
+                {
+                    "name": "Concert Hall",
+                    "description": "a room with a stage and a lot of seats",
+                    "locked": true,
+                    "key": {
+                        "name": "ticket to the concert hall"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Concert Hall"
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Kitchen": {
+            "name": "Kitchen",
+            "description": "a room with a stove and a fridge",
+            "doors": [
+                {
+                    "name": "Pantry",
+                    "description": "a room with a lot of food",
+                    "locked": true,
+                    "key": {
+                        "name": "pantry"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Pantry"
+                },
+                {
+                    "name": "Dining Room",
+                    "description": "a room with a table and chairs",
+                    "locked": false,
+                    "key": {
+                        "name": "dining room"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dining Room"
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Trophy Cupboard": {
+            "name": "Trophy Cupboard",
+            "description": "a room with a lot of trophies",
+            "doors": [],
+            "items": [],
+            "keys": []
+        },
+        "Pantry": {
+            "name": "Pantry",
+            "description": "a room with a lot of food",
+            "doors": [
+                {
+                    "name": "Silverware Drawer",
+                    "description": "a room with a lot of silverware",
+                    "locked": true,
+                    "key": {
+                        "name": "silverware drawer"
+                    },
+                    "enemy": {
+                        "name": "Silverware Demon",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Silverware Drawer"
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Concert Hall": {
+            "name": "Concert Hall",
+            "description": "a room with a stage and a lot of seats",
+            "doors": [
+                {
+                    "name": "Stage",
+                    "description": "a room with a stage",
+                    "locked": true,
+                    "key": {
+                        "name": "actor's pass"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Stage"
+                },
+                {
+                    "name": "Backstage",
+                    "description": "a room with a lot of props",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Backstage"
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Dressing Room": {
+            "name": "Dressing Room",
+            "description": "a room with a lot of costumes",
+            "doors": [],
+            "items": [],
+            "keys": []
+        },
+        "Armory": {
+            "name": "Armory",
+            "description": "a room with a lot of weapons",
+            "doors": [
+                {
+                    "name": "Trophy Cupboard",
+                    "description": "a room with a lot of trophies",
+                    "locked": true,
+                    "key": {
+                        "name": "trophy cupboard"
+                    },
+                    "enemy": {
+                        "name": "Trophy Keeper",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Trophy Cupboard"
+                }
+            ],
+            "items": [],
+            "keys": []
+        }
+    },
+    "items_held": [
+        {
+            "name": "apple",
+            "description": "a red apple",
+            "health": 10,
+            "attack": 0
+        },
+        {
+            "name": "sword",
+            "description": "a sharp sword",
+            "health": 0,
+            "attack": 10
+        },
+        {
+            "name": "potion",
+            "description": "a red potion",
+            "health": 20,
+            "attack": 0
+        },
+        {
+            "name": "shield",
+            "description": "a shield",
+            "health": 20,
+            "attack": 0
+        },
+        {
+            "name": "trophy",
+            "description": "a golden trophy",
+            "health": 30,
+            "attack": 0
+        },
+        {
+            "name": "bow",
+            "description": "a bow",
+            "health": 0,
+            "attack": 30
+        },
+        {
+            "name": "guitar",
+            "description": "a guitar",
+            "health": 0,
+            "attack": 30
+        },
+        {
+            "name": "laptop",
+            "description": "a laptop",
+            "health": 0,
+            "attack": 30
+        },
+        {
+            "name": "headphones",
+            "description": "a pair of headphones",
+            "health": 20,
+            "attack": 0
+        },
+        {
+            "name": "sound board",
+            "description": "a sound board",
+            "health": 0,
+            "attack": 50
+        },
+        {
+            "name": "costume",
+            "description": "a costume",
+            "health": 20,
+            "attack": 0
+        },
+        {
+            "name": "makeup",
+            "description": "a makeup kit",
+            "health": 0,
+            "attack": 5
+        },
+        {
+            "name": "microphone",
+            "description": "a microphone",
+            "health": 0,
+            "attack": 10
+        },
+        {
+            "name": "bread",
+            "description": "a loaf of bread",
+            "health": 10,
+            "attack": 0
+        },
+        {
+            "name": "dagger",
+            "description": "a sharp dagger",
+            "health": 0,
+            "attack": 10
+        },
+        {
+            "name": "fork",
+            "description": "a fork",
+            "health": 5,
+            "attack": 0
+        },
+        {
+            "name": "knife",
+            "description": "a knife",
+            "health": 0,
+            "attack": 5
+        },
+        {
+            "name": "Grandma's Special Spoon",
+            "description": "a spoon",
+            "health": 0,
+            "attack": 50
+        }
+    ],
+    "keys_held": [
+        {
+            "name": "kitchen"
+        },
+        {
+            "name": "ticket to the concert hall"
+        },
+        {
+            "name": "pantry"
+        },
+        {
+            "name": "trophy cupboard"
+        },
+        {
+            "name": "silverware drawer"
+        },
+        {
+            "name": "staff pass"
+        },
+        {
+            "name": "actor's pass"
+        }
+    ],
+    "health": 151,
+    "attack": 13,
+    "battles": [
+        {
+            "winner": true,
+            "player_health": 25,
+            "enemy_health": 0,
+            "enemy_name": "Trophy Keeper"
+        },
+        {
+            "winner": true,
+            "player_health": 29,
+            "enemy_health": 0,
+            "enemy_name": "Stressed actor"
+        },
+        {
+            "winner": true,
+            "player_health": 54,
+            "enemy_health": 0,
+            "enemy_name": "Silverware Demon"
+        }
+    ],
+    "current_room": {
+        "name": "Entrance Hall",
+        "description": "the first room - the entrance hall",
+        "doors": [
+            {
+                "name": "Kitchen",
+                "description": "a room with a stove and a fridge",
+                "locked": true,
+                "key": {
+                    "name": "kitchen"
+                },
+                "enemy": null,
+                "associated_room_name": "Kitchen"
+            },
+            {
+                "name": "Armory",
+                "description": "a room with a lot of weapons",
+                "locked": false,
+                "key": {
+                    "name": ""
+                },
+                "enemy": null,
+                "associated_room_name": "Armory"
+            },
+            {
+                "name": "Concert Hall",
+                "description": "a room with a stage and a lot of seats",
+                "locked": true,
+                "key": {
+                    "name": "ticket to the concert hall"
+                },
+                "enemy": null,
+                "associated_room_name": "Concert Hall"
+            }
+        ],
+        "items": [],
+        "keys": []
+    },
+    "game_name": "bob's full run"
+}
