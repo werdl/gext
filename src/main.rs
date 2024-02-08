@@ -133,6 +133,56 @@ fn main() {
     );
 
     rooms.insert(
+        "Jousting Store".to_string(),
+        Room::new(
+            "Jousting Store".to_string(),
+            "a room with a lot of jousting equipment".to_string(),
+            vec![],
+            vec![
+                Item::new("helmet".to_string(), "a helmet".to_string(), 20, 0),
+                Item::new(
+                    "jousting stick".to_string(),
+                    "a jousting stick".to_string(),
+                    0,
+                    100,
+                ),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Jousting Arena".to_string(),
+        Room::new(
+            "Jousting Arena".to_string(),
+            "a room with a lot of horses and knights".to_string(),
+            vec![Door::new(
+                "Jousting Store".to_string(),
+                "a room with a lot of jousting equipment".to_string(),
+                false,
+                Key::new("".to_string()),
+                Some(Player::new(
+                    "Knight".to_string(),
+                    empty_map.clone(),
+                    vec![],
+                    vec![],
+                    400,
+                    80,
+                    vec![],
+                    empty_room.clone(),
+                    "".to_string(),
+                )),
+                "Armory".to_string(),
+            )],
+            vec![
+                Item::new("lance".to_string(), "a lance".to_string(), 0, 20),
+                Item::new("horse".to_string(), "a horse".to_string(), 150, 0),
+            ],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
         "Armory".to_string(),
         Room::new(
             "Armory".to_string(),
@@ -332,36 +382,48 @@ fn main() {
                     40,
                 ),
             ],
-            vec![
-                Key::new("staff pass".to_string()),
-            ],
+            vec![Key::new("staff pass".to_string())],
         ),
     );
 
-    rooms.insert("Dressing Room".to_string(), Room::new(
+    rooms.insert(
         "Dressing Room".to_string(),
-        "a room with a lot of costumes".to_string(),
-        vec![],
-        vec![
-            Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
-            Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
-        ],
-        vec![
-            Key::new("actor's pass".to_string()),
-        ],
-    ));
+        Room::new(
+            "Dressing Room".to_string(),
+            "a room with a lot of costumes".to_string(),
+            vec![],
+            vec![
+                Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
+                Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
+            ],
+            vec![Key::new("actor's pass".to_string())],
+        ),
+    );
 
-    rooms.insert("Tech Room".to_string(), Room::new(
+    rooms.insert(
         "Tech Room".to_string(),
-        "a room with a lot of tech".to_string(),
-        vec![],
-        vec![
-            Item::new("laptop".to_string(), "a laptop".to_string(), 0, 30),
-            Item::new("headphones".to_string(), "a pair of headphones".to_string(), 20, 0),
-            Item::new("sound board".to_string(), "a sound board".to_string(), 0, 50),
-        ],
-        vec![],
-    ));
+        Room::new(
+            "Tech Room".to_string(),
+            "a room with a lot of tech".to_string(),
+            vec![],
+            vec![
+                Item::new("laptop".to_string(), "a laptop".to_string(), 0, 30),
+                Item::new(
+                    "headphones".to_string(),
+                    "a pair of headphones".to_string(),
+                    20,
+                    0,
+                ),
+                Item::new(
+                    "sound board".to_string(),
+                    "a sound board".to_string(),
+                    0,
+                    50,
+                ),
+            ],
+            vec![],
+        ),
+    );
 
     let mut player = Player {
         name: "Player".to_string(),
@@ -528,7 +590,7 @@ fn main() {
             "search" => {
                 for item in &player.current_room.items {
                     write(
-                        format!("You see \"{}\" (item)", item.name).as_str(),
+                        format!("You see \"{}\" (item) that buffs {} health and {} attack", item.name, item.health, item.attack).as_str(),
                         "green",
                     );
                 }
@@ -540,12 +602,17 @@ fn main() {
                 for door in &player.current_room.doors {
                     write(
                         format!(
-                            "You see \"{}\" ({} door)",
+                            "You see \"{}\" ({}, {} door)",
                             door.name,
                             if door.locked && !player.keys_held.contains(&door.key) {
                                 "locked"
                             } else {
                                 "unlocked"
+                            },
+                            if door.enemy.is_some() {
+                                "guarded"
+                            } else {
+                                "unguarded"
                             }
                         )
                         .as_str(),
@@ -576,11 +643,14 @@ fn main() {
 
             "inventory" => {
                 for item in &player.items_held {
-                    write(format!("You have the {}", item.name).as_str(), "green");
+                    write(
+                        format!("You have the \"{}\" (item) that buffs {} health and {} attack", item.name, item.health, item.attack).as_str(),
+                        "green",
+                    );
                 }
 
                 for key in &player.keys_held {
-                    write(format!("You have the {}", key.name).as_str(), "green");
+                    write(format!("You have the {} (key)", key.name).as_str(), "green");
                 }
 
                 write(
