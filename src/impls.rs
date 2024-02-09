@@ -347,7 +347,12 @@ impl Player {
                             return;
                         }
                     }
-                    if door.enemy.is_some() && !self.battles.iter().any(|b| b.enemy_name == door.enemy.clone().unwrap().name){
+                    if door.enemy.is_some()
+                        && !self
+                            .battles
+                            .iter()
+                            .any(|b| b.enemy_name == door.enemy.clone().unwrap().name)
+                    {
                         let enemy = &mut door.enemy.clone().unwrap();
                         let result = self.fight(enemy);
 
@@ -517,7 +522,8 @@ impl Player {
                     .as_str(),
                     "red",
                 );
-                std::process::exit(1);
+
+                File::create("gext.json").unwrap()
             });
 
         let json = serde_json::to_string(&self).unwrap();

@@ -129,6 +129,15 @@ fn main() {
                     "Forest".to_string(),
                     None,
                 ),
+                Door::new(
+                    "Downstairs Staircase".to_string(),
+                    "a staircase leading to the basement".to_string(),
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Downstairs Staircase".to_string(),
+                    None,
+                ),
             ],
             vec![
                 Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
@@ -141,8 +150,158 @@ fn main() {
             ],
             vec![
                 Key::new("kitchen".to_string()),
-                Key::new("ticket to the concert hall".to_string()),
+                Key::new("concert hall ticket".to_string()),
             ],
+        ),
+    );
+
+    rooms.insert(
+        "North Dungeon".to_string(),
+        Room::new(
+            "North Dungeon".to_string(),
+            "a dark dungeon".to_string(),
+            vec![],
+            vec![Item::new(
+                "boulder".to_string(),
+                "a boulder".to_string(),
+                50,
+                0,
+            )],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "East Dungeon".to_string(),
+        Room::new(
+            "East Dungeon".to_string(),
+            "a dark dungeon".to_string(),
+            vec![Door::new(
+                "East Dungeon Cell".to_string(),
+                "a dark dungeon cell".to_string(),
+                false,
+                Key::new("".to_string()),
+                None,
+                "Dungeon".to_string(),
+                None,
+            )],
+            vec![Item::new("stick".to_string(), "a stick".to_string(), 0, 1)],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "West Dungeon".to_string(),
+        Room::new(
+            "West Dungeon".to_string(),
+            "a dark dungeon".to_string(),
+            vec![],
+            vec![Item::new(
+                "stale bread".to_string(),
+                "a loaf of bread".to_string(),
+                -10,
+                0,
+            )],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "South Dungeon".to_string(),
+        Room::new(
+            "South Dungeon".to_string(),
+            "a dark dungeon".to_string(),
+            vec![],
+            vec![Item::new(
+                "window bar".to_string(),
+                "a bar".to_string(),
+                0,
+                50,
+            )],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "East Dungeon Cell".to_string(),
+        Room::new(
+            "East Dungeon Cell".to_string(),
+            "a dark dungeon cell".to_string(),
+            vec![],
+            vec![Item::new(
+                "chain".to_string(),
+                "a chain".to_string(),
+                0,
+                100,
+            )],
+            vec![Key::new("dungeon key".to_string())],
+        ),
+    );
+
+    rooms.insert(
+        "Dungeon Corridor".to_string(),
+        Room::new(
+            "Dungeon Corridor".to_string(),
+            "a dark corridor".to_string(),
+            vec![
+                Door::new(
+                    "North Dungeon".to_string(),
+                    "a dark dungeon".to_string(),
+                    true,
+                    Key::new("dungeon key".to_string()),
+                    None,
+                    "Dungeon".to_string(),
+                    None,
+                ),
+                Door::new(
+                    "East Dungeon".to_string(),
+                    "a dark dungeon".to_string(),
+                    false,
+                    Key::new("".to_string()),
+                    None,
+                    "Dungeon".to_string(),
+                    None,
+                ),
+                Door::new(
+                    "West Dungeon".to_string(),
+                    "a dark dungeon".to_string(),
+                    true,
+                    Key::new("dungeon key".to_string()),
+                    None,
+                    "Dungeon".to_string(),
+                    None,
+                ),
+                Door::new(
+                    "South Dungeon".to_string(),
+                    "a dark dungeon".to_string(),
+                    false,
+                    Key::new("dungeon key".to_string()),
+                    None,
+                    "Dungeon".to_string(),
+                    None,
+                ),
+            ],
+            vec![],
+            vec![],
+        ),
+    );
+
+    rooms.insert(
+        "Downstairs Staircase".to_string(),
+        Room::new(
+            "Downstairs Staircase".to_string(),
+            "a staircase leading to the basement".to_string(),
+            vec![Door::new(
+                "Dungeon Corridor".to_string(),
+                "a dark corridor".to_string(),
+                true,
+                Key::new("dungeons".to_string()),
+                None,
+                "Dungeon Corridor".to_string(),
+                None,
+            )],
+            vec![],
+            vec![],
         ),
     );
 
@@ -179,7 +338,7 @@ fn main() {
                     0,
                 ),
             ],
-            vec![],
+            vec![Key::new("dungeons".to_string())],
         ),
     );
 
@@ -317,12 +476,10 @@ fn main() {
                     "".to_string(),
                 )),
                 "Armory".to_string(),
-                Some(
-                    RoomRequirements {
-                        health: 400,
-                        attack: 60,
-                    },
-                ),
+                Some(RoomRequirements {
+                    health: 400,
+                    attack: 60,
+                }),
             )],
             vec![
                 Item::new("lance".to_string(), "a lance".to_string(), 0, 20),
@@ -460,12 +617,10 @@ fn main() {
                     Key::new("actor's pass".to_string()),
                     None,
                     "Stage".to_string(),
-                    Some(
-                        RoomRequirements {
-                            health: 300,
-                            attack: 0,
-                        },
-                    ),
+                    Some(RoomRequirements {
+                        health: 300,
+                        attack: 0,
+                    }),
                 ),
                 Door::new(
                     "Backstage".to_string(),
@@ -644,9 +799,40 @@ fn main() {
 
         let input = input.trim();
 
-        let commands: Vec<&str> = input.splitn(2, " ").collect();
+        let mut commands: Vec<&str> = input.splitn(2, " ").collect();
+
+        if std::env::args()
+            .collect::<Vec<_>>()
+            .contains(&"-d".to_string())
+            || std::env::args()
+                .collect::<Vec<_>>()
+                .contains(&"--debug".to_string())
+        {
+            if commands[0] == "give" {
+                let item = Item::new(
+                    commands[1].to_string(),
+                    "a debug item".to_string(),
+                    100,
+                    100,
+                );
+
+                player.items_held.push(item);
+
+                commands[0] = "blank";
+            } else if commands[0] == "givekey" {
+                let key = Key::new(commands[1].to_string());
+
+                player.keys_held.push(key);
+
+                commands[0] = "blank";
+            }
+        }
 
         match commands[0] {
+            "blank" => {
+                continue;
+            }
+
             "quit" => {
                 write("Goodbye!", "green");
                 player.save();
@@ -780,7 +966,12 @@ fn main() {
                             } else {
                                 "unlocked"
                             },
-                            if door.enemy.is_some() && !player.battles.iter().any(|b| b.enemy_name == door.enemy.clone().unwrap().name) {
+                            if door.enemy.is_some()
+                                && !player
+                                    .battles
+                                    .iter()
+                                    .any(|b| b.enemy_name == door.enemy.clone().unwrap().name)
+                            {
                                 "guarded"
                             } else {
                                 "unguarded"
@@ -851,5 +1042,3 @@ fn main() {
         }
     }
 }
-
-// TODO: add a notice during searching that informs the user if a door is guarded by an enemy
