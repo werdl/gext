@@ -8,7 +8,7 @@ use std::fs::File;
 mod impls;
 mod structs;
 
-use structs::{Door, Item, Key, Player, Room, RoomRequirements, Class};
+use structs::{Class, Door, Item, Key, Player, Room, RoomRequirements};
 
 fn write(text: &str, color: &str) {
     let term = Term::stdout();
@@ -1059,7 +1059,11 @@ fn main() {
                     write(
                         format!(
                             "You have the \"{}\" (item, \"{}\") that buffs {}❤️, {}🪓 and {}🛡️",
-                            item.name, truncate_string(item.description.as_str(), 50), item.health, item.attack, item.defense
+                            item.name,
+                            truncate_string(item.description.as_str(), 50),
+                            item.health,
+                            item.attack,
+                            item.defense
                         )
                         .as_str(),
                         "green",

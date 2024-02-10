@@ -217,14 +217,18 @@ impl Player {
                 0,
                 0,
                 0,
-            )
+            ),
         ];
 
         write("Choose a class:", "yellow");
 
         for class in &classes {
             write(
-                format!("{}: {} -  {}❤️, {}🪓, {}🛡️", class.name, class.description, class.health, class.attack, class.defense).as_str(),
+                format!(
+                    "{}: {} -  {}❤️, {}🪓, {}🛡️",
+                    class.name, class.description, class.health, class.attack, class.defense
+                )
+                .as_str(),
                 "yellow",
             );
         }
@@ -233,7 +237,10 @@ impl Player {
 
         let input = input.trim().to_lowercase();
 
-        let class = classes.iter().find(|c| c.name.to_lowercase() == input).unwrap_or(&classes[0]);
+        let class = classes
+            .iter()
+            .find(|c| c.name.to_lowercase() == input)
+            .unwrap_or(&classes[0]);
 
         write(
             format!(
@@ -271,7 +278,7 @@ impl Player {
         current_room: Room,
         game_name: String,
         defense: i32,
-        class: Class
+        class: Class,
     ) -> Player {
         Player {
             name,
@@ -284,7 +291,7 @@ impl Player {
             current_room,
             game_name,
             defense,
-            class
+            class,
         }
     }
     pub fn fight(&mut self, enemy: &mut Player) -> BattleResult {
@@ -410,7 +417,13 @@ impl Player {
 
                 if self.class.name == "Dark Mage" {
                     write("You lost the fight, but you have a second chance! However, you now reassign your class to a different one.", "red");
-                    self.class = Player::init(self.name.clone(), self.map.clone(), self.game_name.clone(), self.current_room.name.clone()).class;
+                    self.class = Player::init(
+                        self.name.clone(),
+                        self.map.clone(),
+                        self.game_name.clone(),
+                        self.current_room.name.clone(),
+                    )
+                    .class;
                     return self.fight(&mut initial_enemy.clone());
                 }
 
@@ -552,7 +565,6 @@ impl Player {
                             self.health += enemy.health + (self.class.won_battle_health_bonus);
                             self.attack += enemy.attack + (self.class.won_battle_attack_bonus);
                             self.defense += enemy.defense + (self.class.won_battle_defense_bonus);
-
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
                             write(
@@ -702,8 +714,8 @@ impl Player {
             }
         }
 
-        let mut file =
-            File::create(format!("savegames/{}.save.json", self.game_name)).unwrap_or_else(|err| {
+        let mut file = File::create(format!("savegames/{}.save.json", self.game_name))
+            .unwrap_or_else(|err| {
                 write(
                     format!(
                         "Error creating the file: {} (ensure savegames dir exists)",
