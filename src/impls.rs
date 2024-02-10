@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use console::Term;
 
-use crate::structs::{BattleResult, Door, Item, Key, Player, Room, RoomRequirements};
+use crate::structs::{BattleResult, Class, Door, Item, Key, Player, Room, RoomRequirements};
 
 use crate::write;
 
@@ -17,12 +17,13 @@ impl Key {
 }
 
 impl Item {
-    pub fn new(name: String, description: String, health: i32, attack: i32) -> Item {
+    pub fn new(name: String, description: String, health: i32, attack: i32, defense: i32) -> Item {
         Item {
             name,
             description,
             health,
             attack,
+            defense,
         }
     }
 }
@@ -83,7 +84,182 @@ impl BattleResult {
     }
 }
 
+impl Class {
+    pub fn default() -> Class {
+        Class {
+            name: "Default".to_string(),
+            description: "Looks like somebody didn't choose a class...".to_string(),
+            health: 100,
+            attack: 10,
+            defense: 10,
+            starting_items: vec![],
+            starting_keys: vec![],
+            won_battle_attack_bonus: 5,
+            won_battle_defense_bonus: 5,
+            won_battle_health_bonus: 5,
+        }
+    }
+    pub fn new(
+        name: String,
+        description: String,
+        health: i32,
+        attack: i32,
+        defense: i32,
+        starting_items: Vec<Item>,
+        starting_keys: Vec<Key>,
+        won_battle_attack_bonus: i32,
+        won_battle_defense_bonus: i32,
+        won_battle_health_bonus: i32,
+    ) -> Class {
+        Class {
+            name,
+            description,
+            health,
+            attack,
+            defense,
+            starting_items,
+            starting_keys,
+            won_battle_attack_bonus,
+            won_battle_defense_bonus,
+            won_battle_health_bonus,
+        }
+    }
+}
+
 impl Player {
+    pub fn init(
+        name: String,
+        map: HashMap<String, Room>,
+        game_name: String,
+        starting_room: String,
+    ) -> Player {
+        let classes: Vec<Class> = vec![
+            Class::new(
+                "Warrior".to_string(),
+                "A strong and brave warrior.".to_string(),
+                100,
+                40,
+                20,
+                vec![Item::new(
+                    "sword".to_string(),
+                    "A sharp sword.".to_string(),
+                    0,
+                    10,
+                    0,
+                )],
+                vec![Key::new("key".to_string())],
+                5,
+                5,
+                5,
+            ),
+            Class::new(
+                "Mage".to_string(),
+                "A wise and powerful mage.".to_string(),
+                150,
+                15,
+                5,
+                vec![Item::new(
+                    "staff".to_string(),
+                    "A powerful staff.".to_string(),
+                    0,
+                    15,
+                    0,
+                )],
+                vec![],
+                10,
+                0,
+                10,
+            ),
+            Class::new(
+                "Rogue".to_string(),
+                "A sneaky and agile rogue.".to_string(),
+                90,
+                5,
+                25,
+                vec![Item::new(
+                    "dagger".to_string(),
+                    "A sharp dagger.".to_string(),
+                    0,
+                    5,
+                    0,
+                )],
+                vec![],
+                0,
+                10,
+                5,
+            ),
+            Class::new(
+                "Monk".to_string(),
+                "A peaceful and strong monk.".to_string(),
+                175,
+                5,
+                10,
+                vec![Item::new(
+                    "strong will".to_string(),
+                    "A strong mind trumps any weapon.".to_string(),
+                    100,
+                    0,
+                    0,
+                )],
+                vec![],
+                5,
+                5,
+                5,
+            ),
+            Class::new(
+                "Dark Mage".to_string(),
+                "A mage with no buffs - but has a second shot at every battle.".to_string(),
+                100,
+                20,
+                10,
+                vec![],
+                vec![],
+                0,
+                0,
+                0,
+            )
+        ];
+
+        write("Choose a class:", "yellow");
+
+        for class in &classes {
+            write(
+                format!("{}: {} -  {}❤️, {}🪓, {}🛡️", class.name, class.description, class.health, class.attack, class.defense).as_str(),
+                "yellow",
+            );
+        }
+
+        let input = Term::stdout().read_line().unwrap();
+
+        let input = input.trim().to_lowercase();
+
+        let class = classes.iter().find(|c| c.name.to_lowercase() == input).unwrap_or(&classes[0]);
+
+        write(
+            format!(
+                "You chose the {} class, which has {}❤️, {}🪓 and {}🛡️.",
+                class.name, class.health, class.attack, class.defense
+            )
+            .as_str(),
+            "green",
+        );
+
+        let player = Player {
+            name,
+            map: map.clone(),
+            items_held: class.starting_items.clone(),
+            keys_held: class.starting_keys.clone(),
+            health: class.health,
+            attack: class.attack,
+            defense: class.defense,
+            battles: vec![],
+            current_room: map.clone().get(&starting_room).unwrap().clone(),
+            game_name,
+            class: class.clone(),
+        };
+
+        player
+    }
     pub fn new(
         name: String,
         map: HashMap<String, Room>,
@@ -94,6 +270,8 @@ impl Player {
         battles: Vec<BattleResult>,
         current_room: Room,
         game_name: String,
+        defense: i32,
+        class: Class
     ) -> Player {
         Player {
             name,
@@ -105,9 +283,13 @@ impl Player {
             battles,
             current_room,
             game_name,
+            defense,
+            class
         }
     }
     pub fn fight(&mut self, enemy: &mut Player) -> BattleResult {
+        let initial_enemy = enemy.clone();
+
         let initial_health = self.health;
         let initial_attack = self.attack;
 
@@ -123,8 +305,8 @@ impl Player {
 
         write(
             format!(
-            "You are in a fight! You have to fight the enemy! You have {} health and {} attack, the enemy {} health and {} attack.",
-            self.health, player_attack, enemy_health, enemy_attack
+            "You are in a fight! You have to fight the enemy! You have {}❤️, {}🪓 and {}🛡️, the enemy {}❤️, {}🪓 and {}🛡️. Your class is {}.",
+            self.health, player_attack, self.defense, enemy_health, enemy_attack, enemy.defense, self.class.name
             ).as_str(),
             "magenta"
         );
@@ -145,8 +327,8 @@ impl Player {
         loop {
             write(
                 format!(
-                    "You have {} health and {} attack, the enemy has {} health and {} attack. Do you wish to use an item? (y/n)",
-                    self.health, player_attack, enemy_health, enemy_attack
+                    "You have {}❤️, {}🪓 and {}🛡️, the enemy has {}❤️, {}🪓 and {}🛡️. Do you wish to use an item? (y/n)",
+                    self.health, player_attack, self.defense, enemy_health, enemy_attack, enemy.defense
                 )
                 .as_str(),
                 "magenta"
@@ -161,8 +343,8 @@ impl Player {
                     for item in &self.items_held {
                         write(
                             format!(
-                                "You have the {}, which buffs you {} health and {} attack",
-                                item.name, item.health, item.attack
+                                "You have the {}, which buffs you {}❤️, {}🪓 and {}🛡️",
+                                item.name, item.health, item.attack, item.defense
                             )
                             .as_str(),
                             "magenta",
@@ -179,8 +361,8 @@ impl Player {
                         Some(item) => {
                             write(
                                 format!(
-                                    "You used the {}, which buffs you {} health and {} attack",
-                                    item.name, item.health, item.attack
+                                    "You use the {}, which buffs you {}❤️, {}🪓 and {}🛡️",
+                                    item.name, item.health, item.attack, item.defense
                                 )
                                 .as_str(),
                                 "green",
@@ -198,13 +380,13 @@ impl Player {
                 }
             }
 
-            if enemy.items_held.len() > 0 {
+            if enemy.items_held.len() > 0 && rng.gen_bool(0.5) {
                 let item = enemy.items_held[rng.gen_range(0..enemy.items_held.len())].clone();
 
                 write(
                     format!(
-                        "The enemy used the {}, which buffs them {} health and {} attack",
-                        item.name, item.health, item.attack
+                        "The enemy used the {}, which buffs them {}❤️, {}🪓 and {}🛡️.",
+                        item.name, item.health, item.attack, item.defense
                     )
                     .as_str(),
                     "green",
@@ -213,7 +395,7 @@ impl Player {
                 enemy.use_item(item);
             }
 
-            self.health -= enemy_attack;
+            self.health -= (enemy_attack - self.defense).max(0);
 
             if self.health <= 0 {
                 self.battles.push(BattleResult::new(
@@ -226,10 +408,16 @@ impl Player {
                 self.health = initial_health;
                 self.attack = initial_attack;
 
+                if self.class.name == "Dark Mage" {
+                    write("You lost the fight, but you have a second chance! However, you now reassign your class to a different one.", "red");
+                    self.class = Player::init(self.name.clone(), self.map.clone(), self.game_name.clone(), self.current_room.name.clone()).class;
+                    return self.fight(&mut initial_enemy.clone());
+                }
+
                 return BattleResult::new(false, 0, enemy_health, enemy.name.clone());
             }
 
-            enemy_health -= player_attack;
+            enemy_health -= (player_attack - enemy.defense).max(0);
 
             if enemy_health <= 0 {
                 self.battles
@@ -358,11 +546,13 @@ impl Player {
 
                         if result.winner {
                             write(
-                                "You won the fight! You gain the enemy's health and attack they had at the start of the fight.",
+                                "You won the fight! You gain the enemy's stats they had at the start of the fight.",
                                 "green",
                             );
-                            self.health += enemy.health;
-                            self.attack += enemy.attack;
+                            self.health += enemy.health + (self.class.won_battle_health_bonus);
+                            self.attack += enemy.attack + (self.class.won_battle_attack_bonus);
+                            self.defense += enemy.defense + (self.class.won_battle_defense_bonus);
+
                         } else {
                             write("You lost the fight, your adventure ends here. :-(", "red");
                             write(
@@ -513,7 +703,7 @@ impl Player {
         }
 
         let mut file =
-            File::create(format!("savegames/{}.json", self.game_name)).unwrap_or_else(|err| {
+            File::create(format!("savegames/{}.save.json", self.game_name)).unwrap_or_else(|err| {
                 write(
                     format!(
                         "Error creating the file: {} (ensure savegames dir exists)",
@@ -523,7 +713,7 @@ impl Player {
                     "red",
                 );
 
-                File::create("gext.json").unwrap()
+                File::create("gext.save.json").unwrap()
             });
 
         let json = serde_json::to_string(&self).unwrap();

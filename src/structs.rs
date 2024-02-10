@@ -5,6 +5,7 @@ use std::collections::HashMap;
 pub struct RoomRequirements {
     pub health: i32,
     pub attack: i32,
+    pub defense: i32,
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize)]
@@ -18,6 +19,7 @@ pub struct Item {
     pub description: String,
     pub health: i32,
     pub attack: i32,
+    pub defense: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -45,6 +47,7 @@ pub struct Room {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Player {
+    pub class: Class,
     pub name: String,
 
     pub map: HashMap<String, Room>,
@@ -53,6 +56,7 @@ pub struct Player {
     pub keys_held: Vec<Key>,
     pub health: i32,
     pub attack: i32,
+    pub defense: i32,
 
     pub battles: Vec<BattleResult>,
 
@@ -68,4 +72,20 @@ pub struct BattleResult {
     pub enemy_health: i32,
 
     pub enemy_name: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Class {
+    pub name: String,
+    pub description: String,
+    pub health: i32,
+    pub attack: i32,
+    pub defense: i32,
+
+    pub starting_items: Vec<Item>,
+    pub starting_keys: Vec<Key>,
+
+    pub won_battle_attack_bonus: i32,
+    pub won_battle_defense_bonus: i32,
+    pub won_battle_health_bonus: i32,
 }

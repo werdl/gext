@@ -1,0 +1,1174 @@
+{
+    "class": {
+        "name": "Warrior",
+        "description": "A strong and brave warrior.",
+        "health": 100,
+        "attack": 40,
+        "defense": 20,
+        "starting_items": [
+            {
+                "name": "sword",
+                "description": "A sharp sword.",
+                "health": 0,
+                "attack": 10,
+                "defense": 0
+            }
+        ],
+        "starting_keys": [
+            {
+                "name": "key"
+            }
+        ],
+        "won_battle_attack_bonus": 5,
+        "won_battle_defense_bonus": 5,
+        "won_battle_health_bonus": 5
+    },
+    "name": "n",
+    "map": {
+        "Downstairs Staircase": {
+            "name": "Downstairs Staircase",
+            "description": "a staircase leading to the basement",
+            "doors": [
+                {
+                    "name": "Dungeon Corridor",
+                    "description": "a dark corridor",
+                    "locked": true,
+                    "key": {
+                        "name": "dungeons"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon Corridor",
+                    "requirements": null
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Dungeon Corridor": {
+            "name": "Dungeon Corridor",
+            "description": "a dark corridor",
+            "doors": [
+                {
+                    "name": "North Dungeon",
+                    "description": "a dark dungeon",
+                    "locked": true,
+                    "key": {
+                        "name": "dungeon key"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon",
+                    "requirements": null
+                },
+                {
+                    "name": "East Dungeon",
+                    "description": "a dark dungeon",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon",
+                    "requirements": null
+                },
+                {
+                    "name": "West Dungeon",
+                    "description": "a dark dungeon",
+                    "locked": true,
+                    "key": {
+                        "name": "dungeon key"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon",
+                    "requirements": null
+                },
+                {
+                    "name": "South Dungeon",
+                    "description": "a dark dungeon",
+                    "locked": false,
+                    "key": {
+                        "name": "dungeon key"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon",
+                    "requirements": null
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Jousting Store": {
+            "name": "Jousting Store",
+            "description": "a room with a lot of jousting equipment",
+            "doors": [],
+            "items": [
+                {
+                    "name": "helmet",
+                    "description": "a helmet",
+                    "health": 20,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "jousting stick",
+                    "description": "a jousting stick",
+                    "health": 0,
+                    "attack": 100,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "cabin weekend pass"
+                }
+            ]
+        },
+        "Armory": {
+            "name": "Armory",
+            "description": "a room with a lot of weapons",
+            "doors": [
+                {
+                    "name": "Trophy Cupboard",
+                    "description": "a room with a lot of trophies",
+                    "locked": true,
+                    "key": {
+                        "name": "trophy cupboard"
+                    },
+                    "enemy": {
+                        "class": {
+                            "name": "Default",
+                            "description": "Looks like somebody didn't choose a class...",
+                            "health": 100,
+                            "attack": 10,
+                            "defense": 10,
+                            "starting_items": [],
+                            "starting_keys": [],
+                            "won_battle_attack_bonus": 5,
+                            "won_battle_defense_bonus": 5,
+                            "won_battle_health_bonus": 5
+                        },
+                        "name": "Trophy Keeper",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "defense": 10,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Trophy Cupboard",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "shield",
+                    "description": "a shield",
+                    "health": 20,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "axe",
+                    "description": "a sharp axe",
+                    "health": 0,
+                    "attack": 20,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "trophy cupboard"
+                },
+                {
+                    "name": "pantry"
+                }
+            ]
+        },
+        "Silverware Drawer": {
+            "name": "Silverware Drawer",
+            "description": "a room with a lot of silverware",
+            "doors": [],
+            "items": [
+                {
+                    "name": "fork",
+                    "description": "a fork",
+                    "health": 5,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "knife",
+                    "description": "a knife",
+                    "health": 0,
+                    "attack": 5,
+                    "defense": 0
+                },
+                {
+                    "name": "Grandma's Special Spoon",
+                    "description": "a spoon",
+                    "health": 0,
+                    "attack": 50,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "East Dungeon": {
+            "name": "East Dungeon",
+            "description": "a dark dungeon",
+            "doors": [
+                {
+                    "name": "East Dungeon Cell",
+                    "description": "a dark dungeon cell",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dungeon",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "stick",
+                    "description": "a stick",
+                    "health": 0,
+                    "attack": 1,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Pantry": {
+            "name": "Pantry",
+            "description": "a room with a lot of food",
+            "doors": [
+                {
+                    "name": "Silverware Drawer",
+                    "description": "a room with a lot of silverware",
+                    "locked": true,
+                    "key": {
+                        "name": "silverware drawer"
+                    },
+                    "enemy": {
+                        "class": {
+                            "name": "Default",
+                            "description": "Looks like somebody didn't choose a class...",
+                            "health": 100,
+                            "attack": 10,
+                            "defense": 10,
+                            "starting_items": [],
+                            "starting_keys": [],
+                            "won_battle_attack_bonus": 5,
+                            "won_battle_defense_bonus": 5,
+                            "won_battle_health_bonus": 5
+                        },
+                        "name": "Silverware Demon",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "defense": 10,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Silverware Drawer",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "bread",
+                    "description": "a loaf of bread",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "dagger",
+                    "description": "a sharp dagger",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Dining Room": {
+            "name": "Dining Room",
+            "description": "a room with a table and chairs",
+            "doors": [],
+            "items": [
+                {
+                    "name": "chair",
+                    "description": "a chair",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                },
+                {
+                    "name": "tablecloth",
+                    "description": "a table",
+                    "health": 0,
+                    "attack": 20,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Concert Hall": {
+            "name": "Concert Hall",
+            "description": "a room with a stage and a lot of seats",
+            "doors": [
+                {
+                    "name": "Stage",
+                    "description": "a room with a stage",
+                    "locked": true,
+                    "key": {
+                        "name": "actor's pass"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Stage",
+                    "requirements": {
+                        "health": 300,
+                        "attack": 0,
+                        "defense": 0
+                    }
+                },
+                {
+                    "name": "Backstage",
+                    "description": "a room with a lot of props",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Backstage",
+                    "requirements": null
+                }
+            ],
+            "items": [],
+            "keys": []
+        },
+        "Kitchen": {
+            "name": "Kitchen",
+            "description": "a room with a stove and a fridge",
+            "doors": [
+                {
+                    "name": "Pantry",
+                    "description": "a room with a lot of food",
+                    "locked": true,
+                    "key": {
+                        "name": "pantry"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Pantry",
+                    "requirements": null
+                },
+                {
+                    "name": "Dining Room",
+                    "description": "a room with a table and chairs",
+                    "locked": false,
+                    "key": {
+                        "name": "dining room"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Dining Room",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "apple",
+                    "description": "a red apple",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "sword",
+                    "description": "a sharp sword",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "elf basement"
+                }
+            ]
+        },
+        "Dressing Room": {
+            "name": "Dressing Room",
+            "description": "a room with a lot of costumes",
+            "doors": [],
+            "items": [
+                {
+                    "name": "costume",
+                    "description": "a costume",
+                    "health": 20,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "makeup",
+                    "description": "a makeup kit",
+                    "health": 0,
+                    "attack": 5,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "actor's pass"
+                }
+            ]
+        },
+        "Entrance Hall": {
+            "name": "Entrance Hall",
+            "description": "the first room - the entrance hall",
+            "doors": [
+                {
+                    "name": "Kitchen",
+                    "description": "a room with a stove and a fridge",
+                    "locked": true,
+                    "key": {
+                        "name": "kitchen"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Kitchen",
+                    "requirements": null
+                },
+                {
+                    "name": "Armory",
+                    "description": "a room with a lot of weapons",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Armory",
+                    "requirements": null
+                },
+                {
+                    "name": "Concert Hall",
+                    "description": "a room with a stage and a lot of seats",
+                    "locked": true,
+                    "key": {
+                        "name": "ticket to the concert hall"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Concert Hall",
+                    "requirements": null
+                },
+                {
+                    "name": "Forest",
+                    "description": "a room with a lot of trees",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Forest",
+                    "requirements": null
+                },
+                {
+                    "name": "Downstairs Staircase",
+                    "description": "a staircase leading to the basement",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Downstairs Staircase",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "potion",
+                    "description": "a red potion",
+                    "health": 20,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "poison vial",
+                    "description": "a poisonous liquid that can be used to throw at your enemy",
+                    "health": 0,
+                    "attack": 20,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "kitchen"
+                },
+                {
+                    "name": "concert hall ticket"
+                }
+            ]
+        },
+        "West Dungeon": {
+            "name": "West Dungeon",
+            "description": "a dark dungeon",
+            "doors": [],
+            "items": [
+                {
+                    "name": "stale bread",
+                    "description": "a loaf of bread",
+                    "health": -10,
+                    "attack": 0,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Jousting Arena": {
+            "name": "Jousting Arena",
+            "description": "a room with a lot of horses and knights",
+            "doors": [
+                {
+                    "name": "Jousting Store",
+                    "description": "a room with a lot of jousting equipment",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": {
+                        "class": {
+                            "name": "Default",
+                            "description": "Looks like somebody didn't choose a class...",
+                            "health": 100,
+                            "attack": 10,
+                            "defense": 10,
+                            "starting_items": [],
+                            "starting_keys": [],
+                            "won_battle_attack_bonus": 5,
+                            "won_battle_defense_bonus": 5,
+                            "won_battle_health_bonus": 5
+                        },
+                        "name": "Knight",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 400,
+                        "attack": 80,
+                        "defense": 40,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Armory",
+                    "requirements": {
+                        "health": 400,
+                        "attack": 60,
+                        "defense": 40
+                    }
+                }
+            ],
+            "items": [
+                {
+                    "name": "lance",
+                    "description": "a lance",
+                    "health": 0,
+                    "attack": 20,
+                    "defense": 0
+                },
+                {
+                    "name": "horse",
+                    "description": "a horse",
+                    "health": 150,
+                    "attack": 0,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "North Dungeon": {
+            "name": "North Dungeon",
+            "description": "a dark dungeon",
+            "doors": [],
+            "items": [
+                {
+                    "name": "boulder",
+                    "description": "a boulder",
+                    "health": 50,
+                    "attack": 0,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Trophy Cupboard": {
+            "name": "Trophy Cupboard",
+            "description": "a room with a lot of trophies",
+            "doors": [],
+            "items": [
+                {
+                    "name": "trophy",
+                    "description": "a golden trophy",
+                    "health": 30,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "bow",
+                    "description": "a bow",
+                    "health": 0,
+                    "attack": 30,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "silverware drawer"
+                }
+            ]
+        },
+        "Forest": {
+            "name": "Forest",
+            "description": "a room with a lot of trees",
+            "doors": [
+                {
+                    "name": "Forest Clearing",
+                    "description": "a room with a lot of trees and a clearing",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Forest Clearing",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "stick",
+                    "description": "a stick",
+                    "health": 0,
+                    "attack": 5,
+                    "defense": 0
+                },
+                {
+                    "name": "rock",
+                    "description": "a rock",
+                    "health": 5,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "mushroom",
+                    "description": "a mushroom",
+                    "health": 40,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "berry",
+                    "description": "a berry",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "felled tree",
+                    "description": "a felled tree",
+                    "health": 0,
+                    "attack": 50,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Elf Treehouse": {
+            "name": "Elf Treehouse",
+            "description": "a treehouse full of elves",
+            "doors": [
+                {
+                    "name": "Elf Basement",
+                    "description": "a basement full of elves",
+                    "locked": true,
+                    "key": {
+                        "name": "elf basement"
+                    },
+                    "enemy": {
+                        "class": {
+                            "name": "Default",
+                            "description": "Looks like somebody didn't choose a class...",
+                            "health": 100,
+                            "attack": 10,
+                            "defense": 10,
+                            "starting_items": [],
+                            "starting_keys": [],
+                            "won_battle_attack_bonus": 5,
+                            "won_battle_defense_bonus": 5,
+                            "won_battle_health_bonus": 5
+                        },
+                        "name": "Elf",
+                        "map": {},
+                        "items_held": [],
+                        "keys_held": [],
+                        "health": 800,
+                        "attack": 200,
+                        "defense": 100,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Elf Basement",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "elf hat",
+                    "description": "a hat",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                },
+                {
+                    "name": "elf shoes",
+                    "description": "a pair of shoes",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "dungeons"
+                }
+            ]
+        },
+        "Tech Room": {
+            "name": "Tech Room",
+            "description": "a room with a lot of tech",
+            "doors": [],
+            "items": [
+                {
+                    "name": "laptop",
+                    "description": "a laptop",
+                    "health": 0,
+                    "attack": 30,
+                    "defense": 0
+                },
+                {
+                    "name": "headphones",
+                    "description": "a pair of headphones",
+                    "health": 20,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "sound board",
+                    "description": "a sound board",
+                    "health": 0,
+                    "attack": 50,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "South Dungeon": {
+            "name": "South Dungeon",
+            "description": "a dark dungeon",
+            "doors": [],
+            "items": [
+                {
+                    "name": "window bar",
+                    "description": "a bar",
+                    "health": 0,
+                    "attack": 50,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Forest Clearing": {
+            "name": "Forest Clearing",
+            "description": "a room with a lot of trees and a clearing",
+            "doors": [
+                {
+                    "name": "Forest Cabin",
+                    "description": "a little hideaway",
+                    "locked": true,
+                    "key": {
+                        "name": "cabin weekend pass"
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Forest Cabin",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "stick",
+                    "description": "a stick",
+                    "health": 0,
+                    "attack": 5,
+                    "defense": 0
+                },
+                {
+                    "name": "rock",
+                    "description": "a rock",
+                    "health": 5,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "mushroom",
+                    "description": "a mushroom",
+                    "health": 40,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "berry",
+                    "description": "a berry",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Forest Cabin": {
+            "name": "Forest Cabin",
+            "description": "a little hideaway",
+            "doors": [
+                {
+                    "name": "Elf Treehouse",
+                    "description": "a treehouse full of elves",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Elf Treehouse",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "beans",
+                    "description": "a can of beans",
+                    "health": 10,
+                    "attack": 0,
+                    "defense": 0
+                },
+                {
+                    "name": "axe",
+                    "description": "a sharp axe",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                },
+                {
+                    "name": "beanbag",
+                    "description": "a beanbag",
+                    "health": 20,
+                    "attack": 10,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Elf Basement": {
+            "name": "Elf Basement",
+            "description": "a basement full of elves",
+            "doors": [],
+            "items": [
+                {
+                    "name": "elven scythe",
+                    "description": "a scythe",
+                    "health": 0,
+                    "attack": 70,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Stage": {
+            "name": "Stage",
+            "description": "a room with a stage",
+            "doors": [],
+            "items": [
+                {
+                    "name": "microphone",
+                    "description": "a microphone",
+                    "health": 0,
+                    "attack": 10,
+                    "defense": 0
+                },
+                {
+                    "name": "XLR cable",
+                    "description": "a mic cable",
+                    "health": 0,
+                    "attack": 20,
+                    "defense": 0
+                }
+            ],
+            "keys": []
+        },
+        "Backstage": {
+            "name": "Backstage",
+            "description": "a room with a lot of props",
+            "doors": [
+                {
+                    "name": "Dressing Room",
+                    "description": "a room with a lot of costumes",
+                    "locked": true,
+                    "key": {
+                        "name": "staff pass"
+                    },
+                    "enemy": {
+                        "class": {
+                            "name": "Default",
+                            "description": "Looks like somebody didn't choose a class...",
+                            "health": 100,
+                            "attack": 10,
+                            "defense": 10,
+                            "starting_items": [],
+                            "starting_keys": [],
+                            "won_battle_attack_bonus": 5,
+                            "won_battle_defense_bonus": 5,
+                            "won_battle_health_bonus": 5
+                        },
+                        "name": "Stressed actor",
+                        "map": {},
+                        "items_held": [
+                            {
+                                "name": "costume",
+                                "description": "a costume",
+                                "health": 20,
+                                "attack": 0,
+                                "defense": 0
+                            },
+                            {
+                                "name": "makeup",
+                                "description": "a makeup kit",
+                                "health": 0,
+                                "attack": 5,
+                                "defense": 0
+                            }
+                        ],
+                        "keys_held": [],
+                        "health": 100,
+                        "attack": 20,
+                        "defense": 10,
+                        "battles": [],
+                        "current_room": {
+                            "name": "Empty Room",
+                            "description": "a room with nothing in it",
+                            "doors": [],
+                            "items": [],
+                            "keys": []
+                        },
+                        "game_name": ""
+                    },
+                    "associated_room_name": "Dressing Room",
+                    "requirements": null
+                },
+                {
+                    "name": "Tech Room",
+                    "description": "a room with a lot of tech",
+                    "locked": false,
+                    "key": {
+                        "name": ""
+                    },
+                    "enemy": null,
+                    "associated_room_name": "Tech Room",
+                    "requirements": null
+                }
+            ],
+            "items": [
+                {
+                    "name": "guitar",
+                    "description": "a guitar",
+                    "health": 0,
+                    "attack": 30,
+                    "defense": 0
+                },
+                {
+                    "name": "drumsticks",
+                    "description": "a pair of drumsticks",
+                    "health": 0,
+                    "attack": 40,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "staff pass"
+                }
+            ]
+        },
+        "East Dungeon Cell": {
+            "name": "East Dungeon Cell",
+            "description": "a dark dungeon cell",
+            "doors": [],
+            "items": [
+                {
+                    "name": "chain",
+                    "description": "a chain",
+                    "health": 0,
+                    "attack": 100,
+                    "defense": 0
+                }
+            ],
+            "keys": [
+                {
+                    "name": "dungeon key"
+                }
+            ]
+        }
+    },
+    "items_held": [],
+    "keys_held": [
+        {
+            "name": "trophy cupboard"
+        }
+    ],
+    "health": 100,
+    "attack": 20,
+    "defense": 10,
+    "battles": [
+        {
+            "winner": false,
+            "player_health": 0,
+            "enemy_health": 8,
+            "enemy_name": "Trophy Keeper"
+        },
+        {
+            "winner": false,
+            "player_health": 0,
+            "enemy_health": 33,
+            "enemy_name": "Trophy Keeper"
+        }
+    ],
+    "current_room": {
+        "name": "Armory",
+        "description": "a room with a lot of weapons",
+        "doors": [
+            {
+                "name": "Trophy Cupboard",
+                "description": "a room with a lot of trophies",
+                "locked": true,
+                "key": {
+                    "name": "trophy cupboard"
+                },
+                "enemy": {
+                    "class": {
+                        "name": "Default",
+                        "description": "Looks like somebody didn't choose a class...",
+                        "health": 100,
+                        "attack": 10,
+                        "defense": 10,
+                        "starting_items": [],
+                        "starting_keys": [],
+                        "won_battle_attack_bonus": 5,
+                        "won_battle_defense_bonus": 5,
+                        "won_battle_health_bonus": 5
+                    },
+                    "name": "Trophy Keeper",
+                    "map": {},
+                    "items_held": [],
+                    "keys_held": [],
+                    "health": 100,
+                    "attack": 20,
+                    "defense": 10,
+                    "battles": [],
+                    "current_room": {
+                        "name": "Empty Room",
+                        "description": "a room with nothing in it",
+                        "doors": [],
+                        "items": [],
+                        "keys": []
+                    },
+                    "game_name": ""
+                },
+                "associated_room_name": "Trophy Cupboard",
+                "requirements": null
+            },
+            {
+                "name": "Entrance Hall",
+                "description": "a door to the Entrance Hall",
+                "locked": false,
+                "key": {
+                    "name": ""
+                },
+                "enemy": null,
+                "associated_room_name": "Entrance Hall",
+                "requirements": null
+            },
+            {
+                "name": "Jousting Arena",
+                "description": "a door to the Jousting Arena",
+                "locked": false,
+                "key": {
+                    "name": ""
+                },
+                "enemy": null,
+                "associated_room_name": "Jousting Arena",
+                "requirements": null
+            }
+        ],
+        "items": [
+            {
+                "name": "shield",
+                "description": "a shield",
+                "health": 20,
+                "attack": 0,
+                "defense": 0
+            },
+            {
+                "name": "axe",
+                "description": "a sharp axe",
+                "health": 0,
+                "attack": 20,
+                "defense": 0
+            }
+        ],
+        "keys": [
+            {
+                "name": "trophy cupboard"
+            },
+            {
+                "name": "pantry"
+            }
+        ]
+    },
+    "game_name": "n"
+}

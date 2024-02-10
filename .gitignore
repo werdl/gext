@@ -1,3 +1,6 @@
-/target
-savegames/*
+# Rust
 Cargo.lock
+target/
+
+# Game save files
+savegames/*

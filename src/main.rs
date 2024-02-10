@@ -8,7 +8,7 @@ use std::fs::File;
 mod impls;
 mod structs;
 
-use structs::{Door, Item, Key, Player, Room, RoomRequirements};
+use structs::{Door, Item, Key, Player, Room, RoomRequirements, Class};
 
 fn write(text: &str, color: &str) {
     let term = Term::stdout();
@@ -27,6 +27,18 @@ fn write(text: &str, color: &str) {
     let styled_text = style(text).fg(rgb);
 
     term.write_line(&styled_text.to_string()).unwrap();
+}
+
+fn truncate_string(s: &str, n: usize) -> String {
+    if s.len() <= n {
+        return s.to_string();
+    }
+
+    let mut new_s = s.to_string();
+    new_s.truncate(n);
+    new_s.push_str("...");
+
+    new_s
 }
 
 macro_rules! out {
@@ -80,8 +92,8 @@ fn main() {
                 ),
             ],
             vec![
-                Item::new("apple".to_string(), "a red apple".to_string(), 10, 0),
-                Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10),
+                Item::new("apple".to_string(), "a red apple".to_string(), 10, 0, 0),
+                Item::new("sword".to_string(), "a sharp sword".to_string(), 0, 10, 0),
             ],
             vec![Key::new("elf basement".to_string())],
         ),
@@ -140,12 +152,13 @@ fn main() {
                 ),
             ],
             vec![
-                Item::new("potion".to_string(), "a red potion".to_string(), 20, 0),
+                Item::new("potion".to_string(), "a red potion".to_string(), 20, 0, 0),
                 Item::new(
                     "poison vial".to_string(),
                     "a poisonous liquid that can be used to throw at your enemy".to_string(),
                     0,
                     20,
+                    0,
                 ),
             ],
             vec![
@@ -166,6 +179,7 @@ fn main() {
                 "a boulder".to_string(),
                 50,
                 0,
+                0,
             )],
             vec![],
         ),
@@ -185,7 +199,13 @@ fn main() {
                 "Dungeon".to_string(),
                 None,
             )],
-            vec![Item::new("stick".to_string(), "a stick".to_string(), 0, 1)],
+            vec![Item::new(
+                "stick".to_string(),
+                "a stick".to_string(),
+                0,
+                1,
+                0,
+            )],
             vec![],
         ),
     );
@@ -200,6 +220,7 @@ fn main() {
                 "stale bread".to_string(),
                 "a loaf of bread".to_string(),
                 -10,
+                0,
                 0,
             )],
             vec![],
@@ -217,6 +238,7 @@ fn main() {
                 "a bar".to_string(),
                 0,
                 50,
+                0,
             )],
             vec![],
         ),
@@ -233,6 +255,7 @@ fn main() {
                 "a chain".to_string(),
                 0,
                 100,
+                0,
             )],
             vec![Key::new("dungeon key".to_string())],
         ),
@@ -325,16 +348,19 @@ fn main() {
                     vec![],
                     empty_room.clone(),
                     "".to_string(),
+                    100,
+                    Class::default(),
                 )),
                 "Elf Basement".to_string(),
                 None,
             )],
             vec![
-                Item::new("elf hat".to_string(), "a hat".to_string(), 0, 10),
+                Item::new("elf hat".to_string(), "a hat".to_string(), 0, 10, 0),
                 Item::new(
                     "elf shoes".to_string(),
                     "a pair of shoes".to_string(),
                     10,
+                    0,
                     0,
                 ),
             ],
@@ -353,6 +379,7 @@ fn main() {
                 "a scythe".to_string(),
                 0,
                 70,
+                0,
             )],
             vec![],
         ),
@@ -373,9 +400,9 @@ fn main() {
                 None,
             )],
             vec![
-                Item::new("beans".to_string(), "a can of beans".to_string(), 10, 0),
-                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 10),
-                Item::new("beanbag".to_string(), "a beanbag".to_string(), 20, 10),
+                Item::new("beans".to_string(), "a can of beans".to_string(), 10, 0, 0),
+                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 10, 0),
+                Item::new("beanbag".to_string(), "a beanbag".to_string(), 20, 10, 0),
             ],
             vec![],
         ),
@@ -396,10 +423,10 @@ fn main() {
                 None,
             )],
             vec![
-                Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
-                Item::new("rock".to_string(), "a rock".to_string(), 5, 0),
-                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0),
-                Item::new("berry".to_string(), "a berry".to_string(), 10, 0),
+                Item::new("stick".to_string(), "a stick".to_string(), 0, 5, 0),
+                Item::new("rock".to_string(), "a rock".to_string(), 5, 0, 0),
+                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0, 0),
+                Item::new("berry".to_string(), "a berry".to_string(), 10, 0, 0),
             ],
             vec![],
         ),
@@ -420,15 +447,16 @@ fn main() {
                 None,
             )],
             vec![
-                Item::new("stick".to_string(), "a stick".to_string(), 0, 5),
-                Item::new("rock".to_string(), "a rock".to_string(), 5, 0),
-                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0),
-                Item::new("berry".to_string(), "a berry".to_string(), 10, 0),
+                Item::new("stick".to_string(), "a stick".to_string(), 0, 5, 0),
+                Item::new("rock".to_string(), "a rock".to_string(), 5, 0, 0),
+                Item::new("mushroom".to_string(), "a mushroom".to_string(), 40, 0, 0),
+                Item::new("berry".to_string(), "a berry".to_string(), 10, 0, 0),
                 Item::new(
                     "felled tree".to_string(),
                     "a felled tree".to_string(),
                     0,
                     50,
+                    0,
                 ),
             ],
             vec![],
@@ -442,12 +470,13 @@ fn main() {
             "a room with a lot of jousting equipment".to_string(),
             vec![],
             vec![
-                Item::new("helmet".to_string(), "a helmet".to_string(), 20, 0),
+                Item::new("helmet".to_string(), "a helmet".to_string(), 20, 0, 0),
                 Item::new(
                     "jousting stick".to_string(),
                     "a jousting stick".to_string(),
                     0,
                     100,
+                    0,
                 ),
             ],
             vec![Key::new("cabin weekend pass".to_string())],
@@ -474,16 +503,19 @@ fn main() {
                     vec![],
                     empty_room.clone(),
                     "".to_string(),
+                    40,
+                    Class::default(),
                 )),
                 "Armory".to_string(),
                 Some(RoomRequirements {
                     health: 400,
                     attack: 60,
+                    defense: 40,
                 }),
             )],
             vec![
-                Item::new("lance".to_string(), "a lance".to_string(), 0, 20),
-                Item::new("horse".to_string(), "a horse".to_string(), 150, 0),
+                Item::new("lance".to_string(), "a lance".to_string(), 0, 20, 0),
+                Item::new("horse".to_string(), "a horse".to_string(), 150, 0, 0),
             ],
             vec![],
         ),
@@ -509,13 +541,15 @@ fn main() {
                     vec![],
                     empty_room.clone(),
                     "".to_string(),
+                    10,
+                    Class::default(),
                 )),
                 "Trophy Cupboard".to_string(),
                 None,
             )],
             vec![
-                Item::new("shield".to_string(), "a shield".to_string(), 20, 0),
-                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 20),
+                Item::new("shield".to_string(), "a shield".to_string(), 20, 0, 0),
+                Item::new("axe".to_string(), "a sharp axe".to_string(), 0, 20, 0),
             ],
             vec![
                 Key::new("trophy cupboard".to_string()),
@@ -531,8 +565,14 @@ fn main() {
             "a room with a lot of trophies".to_string(),
             vec![],
             vec![
-                Item::new("trophy".to_string(), "a golden trophy".to_string(), 30, 0),
-                Item::new("bow".to_string(), "a bow".to_string(), 0, 30),
+                Item::new(
+                    "trophy".to_string(),
+                    "a golden trophy".to_string(),
+                    30,
+                    0,
+                    0,
+                ),
+                Item::new("bow".to_string(), "a bow".to_string(), 0, 30, 0),
             ],
             vec![Key::new("silverware drawer".to_string())],
         ),
@@ -558,13 +598,15 @@ fn main() {
                     vec![],
                     empty_room.clone(),
                     "".to_string(),
+                    10,
+                    Class::default(),
                 )),
                 "Silverware Drawer".to_string(),
                 None,
             )],
             vec![
-                Item::new("bread".to_string(), "a loaf of bread".to_string(), 10, 0),
-                Item::new("dagger".to_string(), "a sharp dagger".to_string(), 0, 10),
+                Item::new("bread".to_string(), "a loaf of bread".to_string(), 10, 0, 0),
+                Item::new("dagger".to_string(), "a sharp dagger".to_string(), 0, 10, 0),
             ],
             vec![],
         ),
@@ -577,13 +619,14 @@ fn main() {
             "a room with a lot of silverware".to_string(),
             vec![],
             vec![
-                Item::new("fork".to_string(), "a fork".to_string(), 5, 0),
-                Item::new("knife".to_string(), "a knife".to_string(), 0, 5),
+                Item::new("fork".to_string(), "a fork".to_string(), 5, 0, 0),
+                Item::new("knife".to_string(), "a knife".to_string(), 0, 5, 0),
                 Item::new(
                     "Grandma's Special Spoon".to_string(),
                     "a spoon".to_string(),
                     0,
                     50,
+                    0,
                 ),
             ],
             vec![],
@@ -597,8 +640,8 @@ fn main() {
             "a room with a table and chairs".to_string(),
             vec![],
             vec![
-                Item::new("chair".to_string(), "a chair".to_string(), 0, 0),
-                Item::new("tablecloth".to_string(), "a table".to_string(), 0, 20),
+                Item::new("chair".to_string(), "a chair".to_string(), 0, 10, 0),
+                Item::new("tablecloth".to_string(), "a table".to_string(), 0, 20, 0),
             ],
             vec![],
         ),
@@ -620,6 +663,7 @@ fn main() {
                     Some(RoomRequirements {
                         health: 300,
                         attack: 0,
+                        defense: 0,
                     }),
                 ),
                 Door::new(
@@ -644,8 +688,14 @@ fn main() {
             "a room with a stage".to_string(),
             vec![],
             vec![
-                Item::new("microphone".to_string(), "a microphone".to_string(), 0, 10),
-                Item::new("XLR cable".to_string(), "a mic cable".to_string(), 0, 20),
+                Item::new(
+                    "microphone".to_string(),
+                    "a microphone".to_string(),
+                    0,
+                    10,
+                    0,
+                ),
+                Item::new("XLR cable".to_string(), "a mic cable".to_string(), 0, 20, 0),
             ],
             vec![],
         ),
@@ -666,8 +716,8 @@ fn main() {
                         "Stressed actor".to_string(),
                         empty_map.clone(),
                         vec![
-                            Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
-                            Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
+                            Item::new("costume".to_string(), "a costume".to_string(), 20, 0, 0),
+                            Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5, 0),
                         ],
                         vec![],
                         100,
@@ -675,6 +725,8 @@ fn main() {
                         vec![],
                         empty_room.clone(),
                         "".to_string(),
+                        10,
+                        Class::default(),
                     )),
                     "Dressing Room".to_string(),
                     None,
@@ -690,12 +742,13 @@ fn main() {
                 ),
             ],
             vec![
-                Item::new("guitar".to_string(), "a guitar".to_string(), 0, 30),
+                Item::new("guitar".to_string(), "a guitar".to_string(), 0, 30, 0),
                 Item::new(
                     "drumsticks".to_string(),
                     "a pair of drumsticks".to_string(),
                     0,
                     40,
+                    0,
                 ),
             ],
             vec![Key::new("staff pass".to_string())],
@@ -709,8 +762,8 @@ fn main() {
             "a room with a lot of costumes".to_string(),
             vec![],
             vec![
-                Item::new("costume".to_string(), "a costume".to_string(), 20, 0),
-                Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5),
+                Item::new("costume".to_string(), "a costume".to_string(), 20, 0, 0),
+                Item::new("makeup".to_string(), "a makeup kit".to_string(), 0, 5, 0),
             ],
             vec![Key::new("actor's pass".to_string())],
         ),
@@ -723,11 +776,12 @@ fn main() {
             "a room with a lot of tech".to_string(),
             vec![],
             vec![
-                Item::new("laptop".to_string(), "a laptop".to_string(), 0, 30),
+                Item::new("laptop".to_string(), "a laptop".to_string(), 0, 30, 0),
                 Item::new(
                     "headphones".to_string(),
                     "a pair of headphones".to_string(),
                     20,
+                    0,
                     0,
                 ),
                 Item::new(
@@ -735,27 +789,14 @@ fn main() {
                     "a sound board".to_string(),
                     0,
                     50,
+                    0,
                 ),
             ],
             vec![],
         ),
     );
 
-    let mut player = Player {
-        name: "Player".to_string(),
-        map: rooms.clone(),
-        items_held: vec![],
-        keys_held: vec![],
-        health: 100,
-        attack: 10,
-        battles: vec![],
-        current_room: rooms
-            .clone()
-            .entry("Entrance Hall".to_string())
-            .or_insert(empty_room.clone())
-            .clone(),
-        game_name: "".to_string(),
-    };
+    let mut player: Player;
 
     out!("Would you like to load a savegame? (y/n)", "yellow");
 
@@ -779,6 +820,12 @@ fn main() {
             "blue",
         );
     } else {
+        player = Player::init(
+            "Player".to_string(),
+            rooms,
+            "".to_string(),
+            "Entrance Hall".to_string(),
+        );
         out!("What is your name?", "yellow");
 
         player.name = term.read_line().unwrap().trim().to_string();
@@ -812,6 +859,7 @@ fn main() {
                 let item = Item::new(
                     commands[1].to_string(),
                     "a debug item".to_string(),
+                    100,
                     100,
                     100,
                 );
@@ -927,7 +975,10 @@ fn main() {
                                 item.description.clone(),
                                 item.health / 2 as i32,
                                 item.attack / 2 as i32,
+                                item.defense / 2 as i32,
                             ));
+
+                            player.items_held.retain(|i| i.name != commands[1]);
                         }
                         None => {
                             write("You don't have that item.", "red");
@@ -944,8 +995,8 @@ fn main() {
                 for item in &player.current_room.items {
                     write(
                         format!(
-                            "You see \"{}\" (item) that buffs {} health and {} attack",
-                            item.name, item.health, item.attack
+                            "You see \"{}\" (item) that buffs {}❤️, {}🪓 and {}🛡️",
+                            item.name, item.health, item.attack, item.defense
                         )
                         .as_str(),
                         "green",
@@ -991,7 +1042,7 @@ fn main() {
                 for battle in &player.battles {
                     write(
                         format!(
-                            "You fought \"{}\" and {}. You had {} health and they had {} health.",
+                            "You fought \"{}\" and {}. You had {}❤️ and they had {}❤️.",
                             battle.enemy_name,
                             if battle.winner { "won" } else { "lost" },
                             battle.player_health,
@@ -1007,8 +1058,8 @@ fn main() {
                 for item in &player.items_held {
                     write(
                         format!(
-                            "You have the \"{}\" (item) that buffs {} health and {} attack",
-                            item.name, item.health, item.attack
+                            "You have the \"{}\" (item, \"{}\") that buffs {}❤️, {}🪓 and {}🛡️",
+                            item.name, truncate_string(item.description.as_str(), 50), item.health, item.attack, item.defense
                         )
                         .as_str(),
                         "green",
@@ -1019,18 +1070,20 @@ fn main() {
                     write(format!("You have the {} (key)", key.name).as_str(), "green");
                 }
 
+                if player.keys_held.len() == 0 && player.items_held.len() == 0 {
+                    out!("You have nothing in your inventory.", "red");
+                }
+            }
+
+            "stats" => {
                 write(
                     format!(
-                        "You have {} health and {} attack",
-                        player.health, player.attack
+                        "You have {}❤️, {}🪓 and {}🛡️. Your class is {}.",
+                        player.health, player.attack, player.defense, player.class.name
                     )
                     .as_str(),
                     "green",
                 );
-
-                if player.keys_held.len() == 0 && player.items_held.len() == 0 {
-                    out!("You have nothing in your inventory.", "red");
-                }
             }
 
             _ => {
