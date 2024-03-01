@@ -1,7 +1,13 @@
 [package]
 name = "gext"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
+license-file = "LICENSE"
+description = "A text-based adventure game"
+homepage = "https://github.com/werdl/gext"
+repository = "https://github.com/werdl/gext"
+readme = "README.md"
+documentation = "https://github.com/werdl/gext"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

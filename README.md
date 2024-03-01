@@ -11,3 +11,4 @@
 - easy to save games and access them later (example save file can be found in [this file](gext.save.json))
 - an expansive class system
 - 3 stats
+- easyily moddable maps, with a modding guide

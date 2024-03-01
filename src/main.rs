@@ -796,6 +796,41 @@ fn main() {
         ),
     );
 
+    // if the -m or --map flag is passed, load a map json file
+    // example invocation: cargo run -- -m treehouse.map.json
+
+    if std::env::args()
+        .collect::<Vec<String>>()
+        .contains(&"-m".to_string())
+        || std::env::args()
+            .collect::<Vec<String>>()
+            .contains(&"--map".to_string())
+    {
+        let map_file_usize = std::env::args()
+            .collect::<Vec<String>>()
+            .iter()
+            .position(|arg| arg == "-m" || arg == "--map")
+            .unwrap();
+
+        let map_file = std::env::args().collect::<Vec<String>>();
+
+        let map_file = map_file.get(map_file_usize + 1).unwrap();
+
+        let map_file = map_file.as_str();
+
+        let map_file = File::open(map_file).unwrap_or_else(|e| {
+            eprintln!("Could not open map file: {}", e);
+            std::process::exit(1);
+        });
+
+        let map: HashMap<String, Room> = serde_json::from_reader(map_file).unwrap_or_else(|e| {
+            eprintln!("Could not parse map file: {}", e);
+            std::process::exit(1);
+        });
+
+        rooms = map;
+    }
+
     let mut player: Player;
 
     out!("Would you like to load a savegame? (y/n)", "yellow");
@@ -917,8 +952,7 @@ fn main() {
                     out!(
                         format!(
                             "{}
-- debug: print the current room's data
-- use [item]: use an item",
+- debug: print the current room's data",
                             style("Debug Commands:").bold()
                         )
                         .as_str(),
