@@ -7,3 +7,4 @@
 - [Modding](modding.md)
     - [Map](modding/map.md)
     - [Player Data](modding/player_data.md)
+- [An Introduction to Rust for Java Developers](intro-for-java-dev.md)
